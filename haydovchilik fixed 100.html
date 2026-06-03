@@ -1,0 +1,2406 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>운전면허 — Haydovchilik</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --yellow: #FFD600;
+  --yd: #F0C800;
+  --green: #2e7d32;
+  --green-l: #e8f5e9;
+  --red: #c62828;
+  --red-l: #ffebee;
+  --bg: #f2f2f7;
+  --bdr: #e0e0e0;
+  --muted: #888;
+  --dark: #1a1a1a;
+}
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+body { background:#1c1c1e; display:flex; justify-content:center; min-height:100vh; padding:24px 16px; font-family:'Nunito','Noto Sans KR',sans-serif; }
+
+/* PHONE */
+.phone { width:390px; background:var(--bg); border-radius:46px; overflow:hidden; box-shadow:0 40px 100px rgba(0,0,0,.6),0 0 0 1px #444; border:2px solid #3a3a3a; }
+.statusbar { background:var(--yellow); padding:14px 24px 8px; display:flex; justify-content:space-between; font-size:13px; font-weight:800; color:#000; }
+
+/* SCREENS */
+.screen { display:none; flex-direction:column; }
+.screen.active { display:flex; animation:slideIn .22s ease; }
+@keyframes slideIn { from{opacity:0;transform:translateX(16px)} to{opacity:1;transform:translateX(0)} }
+
+/* HEADER */
+.app-header { background:var(--yellow); padding:10px 18px 14px; display:flex; align-items:center; justify-content:center; position:relative; flex-shrink:0; }
+.hdr-back { position:absolute; left:16px; font-size:22px; font-weight:700; color:#000; cursor:pointer; width:36px; height:36px; display:flex; align-items:center; justify-content:center; border-radius:50%; background:rgba(0,0,0,.08); }
+.hdr-title { font-size:17px; font-weight:900; color:#000; }
+.hdr-right { position:absolute; right:16px; font-size:12px; font-weight:800; color:#000; background:rgba(0,0,0,.12); padding:5px 10px; border-radius:20px; cursor:pointer; }
+
+/* ── HOME ─────────────────────────── */
+.home-banner {
+  background:linear-gradient(135deg,#1b4332,#2d6a4f,#1b4332);
+  height:110px; display:flex; align-items:center; overflow:hidden; position:relative; cursor:pointer; flex-shrink:0;
+}
+.banner-bg { position:absolute; inset:0;
+  background:radial-gradient(circle at 20% 50%,rgba(255,214,0,.15) 0%,transparent 50%),
+             radial-gradient(circle at 80% 20%,rgba(255,255,255,.08) 0%,transparent 40%); }
+.banner-body { padding:14px 18px; flex:1; position:relative; z-index:1; }
+.banner-tag { background:var(--yellow); color:#000; font-size:10px; font-weight:900; padding:2px 8px; border-radius:4px; display:inline-block; margin-bottom:6px; }
+.banner-title { font-size:17px; font-weight:900; color:#fff; line-height:1.25; }
+.banner-title span { color:var(--yellow); }
+.banner-sub { font-size:11px; color:rgba(255,255,255,.65); margin-top:4px; font-weight:600; }
+.banner-side { padding-right:16px; position:relative; z-index:1; font-size:42px; }
+.banner-dots { position:absolute; bottom:8px; right:14px; display:flex; gap:4px; }
+.bdot { width:6px; height:6px; border-radius:50%; background:rgba(255,255,255,.3); }
+.bdot.on { background:var(--yellow); }
+
+.level-pick { background:#f5f5f5; border:1px solid #ddd; border-radius:8px; padding:5px 10px; font-size:12px; font-weight:700; color:#333; cursor:pointer; }
+
+/* HOME CARDS — fixed height, no stretching */
+.home-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; padding:14px 14px 10px; background:var(--bg); }
+.home-card { background:var(--yellow); border-radius:18px; overflow:hidden; cursor:pointer; transition:transform .15s,box-shadow .15s; box-shadow:0 4px 16px rgba(255,214,0,.22); height:160px; display:flex; flex-direction:column; }
+.home-card:hover { transform:translateY(-2px); box-shadow:0 8px 24px rgba(255,214,0,.32); }
+.home-card:active { transform:scale(.97); }
+.card-bubble { background:#fff; border-radius:12px; margin:12px 10px 0; padding:7px 10px; font-size:12px; font-weight:900; color:#222; line-height:1.3; box-shadow:0 2px 6px rgba(0,0,0,.07); position:relative; }
+.card-bubble::after { content:''; position:absolute; bottom:-7px; left:16px; border:7px solid transparent; border-top-color:#fff; border-bottom:0; }
+.card-ico { flex:1; display:flex; align-items:center; justify-content:center; font-size:40px; padding:4px 0; }
+.card-bar { background:#111; padding:9px 12px; }
+.card-label { font-size:15px; font-weight:900; color:#fff; }
+
+/* HOME MENU ITEMS */
+.home-menu { background:#fff; margin:10px 14px; border-radius:16px; overflow:hidden; border:1px solid var(--bdr); }
+.home-menu-item { display:flex; align-items:center; gap:14px; padding:14px 16px; border-bottom:1px solid #f5f5f5; cursor:pointer; transition:background .1s; }
+.home-menu-item:last-child { border-bottom:none; }
+.home-menu-item:hover { background:#fffde7; }
+.hmi-ico { width:40px; height:40px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:20px; flex-shrink:0; }
+.hmi-ico.blue { background:#e3f2fd; }
+.hmi-ico.orange { background:#fff3e0; }
+.hmi-title { font-size:14px; font-weight:800; color:#111; }
+.hmi-sub { font-size:11px; color:var(--muted); font-weight:600; margin-top:2px; }
+.hmi-arrow { margin-left:auto; color:#ccc; font-size:16px; }
+
+/* BOTTOM TAB — 2 items */
+.btab { background:#fff; border-top:1px solid var(--bdr); display:flex; padding:8px 0 14px; flex-shrink:0; }
+.btab-item { flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; cursor:pointer; padding:4px 0; }
+.btab-ico { font-size:22px; }
+.btab-lbl { font-size:11px; font-weight:800; color:var(--muted); }
+.btab-item.active .btab-lbl { color:var(--yd); }
+.btab-item.active .btab-ico { filter:drop-shadow(0 0 4px rgba(255,214,0,.6)); }
+.btab-divider { width:1px; background:var(--bdr); margin:8px 0; }
+
+/* PIN SCREEN */
+.pin-screen-body {
+  flex:1; display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  background:linear-gradient(160deg,#1a1a2e 0%,#16213e 60%,#0f3460 100%);
+  padding:32px 24px 40px;
+}
+.pin-lock-ico { font-size:52px; margin-bottom:16px; }
+.pin-title { font-size:20px; font-weight:900; color:#fff; margin-bottom:6px; }
+.pin-sub { font-size:13px; color:rgba(255,255,255,.45); font-weight:600; margin-bottom:36px; text-align:center; }
+.pin-dots { display:flex; gap:16px; margin-bottom:40px; }
+.pin-dot {
+  width:18px; height:18px; border-radius:50%;
+  border:2px solid rgba(124,131,253,.6);
+  transition:all .2s;
+}
+.pin-dot.filled { background:#7C83FD; border-color:#7C83FD; transform:scale(1.15); box-shadow:0 0 10px rgba(124,131,253,.5); }
+.pin-dot.error { background:var(--red); border-color:var(--red); }
+.pin-keypad { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; width:100%; max-width:280px; }
+.pin-key {
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:16px;
+  padding:18px 0;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  cursor:pointer; transition:all .15s;
+  user-select:none;
+}
+.pin-key:hover { background:rgba(255,255,255,.14); }
+.pin-key:active { transform:scale(.93); background:rgba(124,131,253,.25); }
+.pin-key.empty { background:transparent; border-color:transparent; cursor:default; }
+.pin-key.del { background:rgba(255,255,255,.05); }
+.pin-key-num { font-size:22px; font-weight:900; color:#fff; line-height:1; }
+.pin-key-letters { font-size:9px; color:rgba(255,255,255,.35); font-weight:700; letter-spacing:1.5px; margin-top:3px; }
+.pin-error-msg { font-size:13px; color:#ef5350; font-weight:700; margin-top:16px; height:20px; text-align:center; }
+@keyframes shake {
+  0%,100%{transform:translateX(0)}
+  20%{transform:translateX(-8px)}
+  40%{transform:translateX(8px)}
+  60%{transform:translateX(-6px)}
+  80%{transform:translateX(6px)}
+}
+.pin-dots.shake { animation:shake .4s ease; }
+
+/* ADMIN PANEL */
+.admin-screen-body { flex:1; overflow-y:auto; background:var(--bg); }
+.admin-screen-body::-webkit-scrollbar { display:none; }
+.admin-header-badge {
+  background:linear-gradient(135deg,#1a1a2e,#16213e);
+  padding:28px 20px 24px;
+  display:flex; flex-direction:column; align-items:center; gap:10px;
+}
+.admin-lock-ico { font-size:48px; }
+.admin-badge-title { font-size:20px; font-weight:900; color:#7C83FD; }
+.admin-badge-sub { font-size:12px; color:rgba(255,255,255,.4); font-weight:600; }
+
+.admin-section { background:#fff; margin:10px 14px; border-radius:16px; overflow:hidden; border:1px solid var(--bdr); }
+.admin-sec-lbl { font-size:11px; font-weight:800; color:var(--muted); padding:12px 16px 4px; text-transform:uppercase; letter-spacing:.5px; }
+.admin-item { display:flex; align-items:center; gap:14px; padding:13px 16px; border-bottom:1px solid #f5f5f5; cursor:pointer; transition:background .1s; }
+.admin-item:last-child { border-bottom:none; }
+.admin-item:hover { background:#f8f8ff; }
+.admin-ico { width:38px; height:38px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; }
+.admin-ico.green { background:#e8f5e9; }
+.admin-ico.blue { background:#e3f2fd; }
+.admin-ico.orange { background:#fff3e0; }
+.admin-ico.red { background:#ffebee; }
+.admin-ico.purple { background:#f3e5f5; }
+.admin-item-info { flex:1; }
+.admin-item-title { font-size:14px; font-weight:800; color:#111; }
+.admin-item-sub { font-size:11px; color:var(--muted); font-weight:600; margin-top:2px; }
+.admin-item-arrow { color:#ccc; font-size:16px; }
+
+/* ACTIVATE USER FORM */
+.admin-form { padding:14px 16px; }
+.admin-input { width:100%; background:#f5f5f5; border:1.5px solid var(--bdr); border-radius:10px; padding:11px 14px; font-size:14px; font-family:'Nunito',sans-serif; outline:none; color:#333; font-weight:700; margin-bottom:10px; }
+.admin-input:focus { border-color:#7C83FD; background:#fff; }
+.admin-go { background:#7C83FD; border:none; border-radius:10px; width:100%; padding:12px; font-size:14px; font-weight:900; color:#fff; cursor:pointer; font-family:'Nunito',sans-serif; transition:background .2s; }
+.admin-go:hover { background:#6366f1; }
+.admin-go.green-btn { background:var(--green); }
+.admin-go.green-btn:hover { background:#1b5e20; }
+
+/* STATS ROW */
+.admin-stats { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; padding:14px; }
+.admin-stat { background:#fff; border:1px solid var(--bdr); border-radius:12px; padding:12px 8px; text-align:center; }
+.admin-stat-num { font-size:22px; font-weight:900; color:#7C83FD; }
+.admin-stat-lbl { font-size:10px; color:var(--muted); font-weight:700; margin-top:3px; text-transform:uppercase; }
+
+/* ── LANG ─────────────────────────── */
+.lang-body { flex:1; padding:24px 16px; background:var(--bg); overflow-y:auto; }
+.lang-big { font-size:22px; font-weight:900; color:#111; text-align:center; margin-bottom:6px; }
+.lang-sub2 { font-size:13px; color:var(--muted); text-align:center; margin-bottom:20px; font-weight:600; }
+.lang-note { background:#fff3cd; border:1px solid #ffe082; border-radius:12px; padding:12px 14px; margin-bottom:18px; font-size:12px; color:#6d4c00; font-weight:700; line-height:1.55; }
+.lang-btn { background:#fff; border:2px solid var(--bdr); border-radius:16px; padding:16px 18px; margin-bottom:10px; display:flex; align-items:center; gap:14px; cursor:pointer; transition:all .2s; }
+.lang-btn:hover,.lang-btn.sel { border-color:var(--yellow); background:#fffde7; }
+.lang-flag { font-size:30px; }
+.lang-info { flex:1; }
+.lang-name { font-size:16px; font-weight:900; color:#111; }
+.lang-nat { font-size:12px; color:var(--muted); font-weight:600; margin-top:2px; }
+.lang-ck { font-size:20px; color:var(--yd); opacity:0; transition:opacity .2s; }
+.lang-btn.sel .lang-ck { opacity:1; }
+.lang-save { background:var(--yellow); border:none; border-radius:16px; width:100%; padding:16px; font-size:16px; font-weight:900; color:#000; cursor:pointer; margin-top:8px; font-family:'Nunito',sans-serif; }
+
+/* ── YORIQNOMA SCREEN ─────────────── */
+.info-body { flex:1; overflow-y:auto; background:var(--bg); }
+.info-body::-webkit-scrollbar { display:none; }
+.info-section { background:#fff; margin:10px 14px; border-radius:16px; overflow:hidden; border:1px solid var(--bdr); }
+.info-sec-title { font-size:12px; font-weight:800; color:var(--muted); padding:12px 16px 6px; text-transform:uppercase; letter-spacing:.5px; }
+.info-item { display:flex; align-items:flex-start; gap:12px; padding:12px 16px; border-bottom:1px solid #f5f5f5; }
+.info-item:last-child { border-bottom:none; }
+.info-num { width:28px; height:28px; min-width:28px; background:var(--yellow); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:900; color:#000; margin-top:2px; }
+.info-txt { flex:1; }
+.info-title { font-size:14px; font-weight:800; color:#111; line-height:1.4; }
+.info-desc { font-size:12px; color:#666; font-weight:600; margin-top:3px; line-height:1.5; }
+
+/* MANZILLAR */
+.addr-item { padding:14px 16px; border-bottom:1px solid #f5f5f5; cursor:pointer; transition:background .1s; }
+.addr-item:last-child { border-bottom:none; }
+.addr-item:hover { background:#fffde7; }
+.addr-city { font-size:14px; font-weight:900; color:#111; display:flex; align-items:center; gap:6px; }
+.addr-city .pin { color:#e53935; }
+.addr-addr { font-size:12px; color:#666; font-weight:600; margin-top:3px; }
+.addr-tags { display:flex; gap:6px; margin-top:6px; flex-wrap:wrap; }
+.addr-tag { background:#f0f0f0; border-radius:6px; padding:2px 8px; font-size:11px; font-weight:700; color:#555; }
+.addr-tag.open { background:#e8f5e9; color:var(--green); }
+
+/* ── CATEGORY ─────────────────────── */
+.mode-bar { background:var(--dark); display:flex; padding:0 12px 10px; gap:8px; flex-shrink:0; }
+.mode-btn { flex:1; padding:10px 0; border-radius:8px; font-size:13px; font-weight:800; cursor:pointer; border:2px solid transparent; transition:all .2s; font-family:'Nunito',sans-serif; }
+.mode-btn.on { background:transparent; border-color:var(--yellow); color:var(--yellow); }
+.mode-btn.off { background:#2d2d2d; color:#555; }
+.cat-list { flex:1; overflow-y:auto; background:var(--bg); }
+.cat-list::-webkit-scrollbar { display:none; }
+.cat-item { background:#fff; padding:14px 16px; border-bottom:1px solid #f0f0f0; display:flex; align-items:center; gap:12px; cursor:pointer; transition:background .1s; }
+.cat-item:hover { background:#fffde7; }
+.cat-item.feat { background:#fffde7; border-left:4px solid var(--yellow); }
+.cat-ico { width:40px; height:40px; border-radius:50%; background:#f5f5f5; border:2px solid #ddd; display:flex; align-items:center; justify-content:center; font-size:18px; font-weight:900; flex-shrink:0; }
+.cat-ico.yl { background:var(--yellow); border-color:var(--yd); color:#000; font-size:13px; }
+.cat-info { flex:1; min-width:0; }
+.cat-name { font-size:15px; font-weight:800; color:#111; }
+.cat-sub { font-size:11px; color:var(--muted); font-weight:600; margin-top:2px; }
+.cat-right { text-align:right; flex-shrink:0; }
+.cat-cnt { font-size:13px; font-weight:800; color:#333; white-space:nowrap; }
+.cat-cnt .done { color:var(--yd); }
+.cat-pb { height:3px; background:#eee; border-radius:2px; margin-top:5px; width:80px; overflow:hidden; }
+.cat-pf { height:100%; background:var(--yellow); border-radius:2px; }
+/* fav-btn removed */
+
+/* ── QUESTION ─────────────────────── */
+.type-bar { background:#fff; padding:10px 16px; display:flex; align-items:center; gap:10px; border-bottom:1px solid var(--bdr); flex-shrink:0; }
+.type-ico { width:34px; height:34px; border-radius:50%; background:#f5f5f5; border:2px solid #ddd; display:flex; align-items:center; justify-content:center; font-size:15px; }
+.type-name { font-size:14px; font-weight:800; color:#111; }
+.type-meta { font-size:12px; color:var(--muted); font-weight:600; }
+.type-score { margin-left:auto; background:#f5f5f5; border:1px solid #ddd; border-radius:20px; padding:3px 10px; font-size:12px; font-weight:700; color:#333; }
+.bm-btn { font-size:18px; color:#ccc; cursor:pointer; }
+
+.q-scroll { flex:1; overflow-y:auto; background:var(--bg); }
+.q-scroll::-webkit-scrollbar { display:none; }
+.q-num-line { padding:14px 16px 4px; font-size:13px; font-weight:700; color:#aaa; }
+.q-num-line strong { color:#111; font-size:15px; }
+.q-text-block { padding:0 16px 12px; }
+.q-main { font-size:16px; font-weight:900; line-height:1.55; color:#0d0d0d; }
+.q-trans { font-size:13px; font-weight:400; line-height:1.5; color:#555; margin-top:8px; padding-top:8px; border-top:1px solid #e8e8e8; }
+
+/* AUDIO BUTTON */
+.audio-btn {
+  margin:0 16px 12px;
+  background:#fff;
+  border:1.5px solid var(--bdr);
+  border-radius:12px;
+  padding:12px 16px;
+  display:flex; align-items:center; gap:12px;
+  cursor:pointer; transition:all .2s;
+}
+.audio-btn:hover { border-color:var(--yellow); background:#fffde7; }
+.audio-btn.playing { border-color:#1976d2; background:#e3f2fd; }
+.audio-ico {
+  width:38px; height:38px; min-width:38px;
+  background:var(--yellow); border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:16px; transition:all .2s;
+}
+.audio-btn.playing .audio-ico { background:#1976d2; animation:pulse 1s infinite; }
+.audio-info { flex:1; }
+.audio-title { font-size:13px; font-weight:800; color:#111; }
+.audio-sub { font-size:11px; color:var(--muted); font-weight:600; margin-top:2px; }
+.audio-waves { display:flex; gap:2px; align-items:center; height:20px; }
+.audio-waves span { width:3px; background:var(--yellow); border-radius:2px; display:block; }
+.audio-btn.playing .audio-waves span { background:#1976d2; }
+@keyframes wave1 { 0%,100%{height:4px} 50%{height:14px} }
+@keyframes wave2 { 0%,100%{height:8px} 50%{height:20px} }
+@keyframes wave3 { 0%,100%{height:12px} 50%{height:6px} }
+@keyframes wave4 { 0%,100%{height:6px} 50%{height:16px} }
+@keyframes wave5 { 0%,100%{height:10px} 50%{height:4px} }
+.audio-btn.playing .audio-waves span:nth-child(1){animation:wave1 .8s infinite}
+.audio-btn.playing .audio-waves span:nth-child(2){animation:wave2 .8s .1s infinite}
+.audio-btn.playing .audio-waves span:nth-child(3){animation:wave3 .8s .2s infinite}
+.audio-btn.playing .audio-waves span:nth-child(4){animation:wave4 .8s .3s infinite}
+.audio-btn.playing .audio-waves span:nth-child(5){animation:wave5 .8s .4s infinite}
+@keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.08)} }
+
+.q-img-box { margin:0 16px 10px; background:#fff; border-radius:12px; border:1px solid #ddd; overflow:hidden; }
+.q-img-ph { height:190px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; color:#bbb; font-size:12px; font-weight:600; }
+.q-img-ph .big { font-size:38px; }
+.q-vid-box { margin:0 16px 10px; background:#0d0d0d; border-radius:12px; height:190px; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:8px; cursor:pointer; position:relative; overflow:hidden; }
+.vid-play { width:54px; height:54px; background:rgba(255,255,255,.15); border:2px solid rgba(255,255,255,.4); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:22px; color:#fff; }
+.vid-lbl { font-size:12px; color:rgba(255,255,255,.5); font-weight:600; }
+.vid-spd { position:absolute; bottom:8px; left:12px; font-size:12px; color:var(--yellow); font-weight:800; }
+.road-box { margin:0 16px 10px; background:#ebebeb; border-radius:12px; padding:12px 14px; }
+.road-title { font-size:11px; color:#999; font-weight:700; margin-bottom:6px; text-transform:uppercase; }
+.road-item { font-size:13px; font-weight:600; color:#333; line-height:1.6; display:flex; align-items:flex-start; gap:6px; }
+.road-item::before { content:'■'; font-size:7px; color:#555; margin-top:5px; flex-shrink:0; }
+
+.ans-wrap { padding:4px 16px 20px; }
+.ans-item { background:#fff; border:1.5px solid var(--bdr); border-radius:12px; padding:13px 14px; margin-bottom:8px; display:flex; align-items:flex-start; gap:12px; cursor:pointer; transition:all .15s; position:relative; }
+.ans-item:hover:not(.no-click) { border-color:var(--yellow); background:#fffde7; }
+.ans-item.no-click { cursor:default; }
+.ans-num { width:28px; height:28px; min-width:28px; border-radius:50%; border:2px solid #ccc; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:800; color:#999; transition:all .15s; }
+.ans-texts { flex:1; }
+.ans-main { font-size:14px; font-weight:700; color:#111; line-height:1.55; }
+.ans-tr { font-size:11px; color:#999; font-weight:400; margin-top:3px; line-height:1.4; }
+.ans-item.correct { background:var(--green-l); border-color:var(--green); }
+.ans-item.correct .ans-num { background:var(--green); border-color:var(--green); color:#fff; }
+.ans-item.correct .ans-main { font-weight:900; color:#1b5e20; }
+.ans-item.wrong { background:var(--red-l); border-color:var(--red); }
+.ans-item.wrong .ans-num { background:var(--red); border-color:var(--red); color:#fff; }
+.ans-item.study-ok { background:var(--green-l); border-color:var(--green); }
+.ans-item.study-ok .ans-num { background:var(--green); border-color:var(--green); color:#fff; }
+.ans-item.study-ok .ans-main { font-weight:900; color:#1b5e20; }
+.ans-item.selected-partial { border-color:var(--yellow); background:#fffde7; }
+.ans-item.selected-partial .ans-num { background:var(--yellow); border-color:var(--yd); color:#000; font-weight:900; }
+.jdp { position:absolute; top:-1px; right:-1px; background:var(--green); color:#fff; font-size:11px; font-weight:900; padding:3px 8px; border-radius:0 10px 0 10px; }
+
+.q-nav-bar { background:var(--dark); display:flex; align-items:center; height:54px; flex-shrink:0; }
+.qnav-s { flex:1; height:100%; display:flex; align-items:center; font-size:14px; font-weight:800; color:var(--yellow); cursor:pointer; padding:0 16px; }
+.qnav-s.dim { color:#444; cursor:default; }
+.qnav-s.r { justify-content:flex-end; }
+.qnav-c { background:#111; flex:1.4; height:100%; display:flex; align-items:center; justify-content:center; gap:6px; cursor:pointer; }
+.qnav-n { font-size:15px; font-weight:900; color:var(--yellow); }
+.qnav-t { color:#555; font-weight:700; }
+.qnav-a { color:#555; font-size:12px; }
+
+/* SCREENSHOT PROTECTION */
+body {
+  -webkit-user-select: none;
+  user-select: none;
+}
+/* iOS screenshot blur trick via CSS content-visibility */
+@media screen {
+  .phone {
+    -webkit-touch-callout: none;
+  }
+}
+
+/* ═══ SCREENSHOT PROTECTION ═══ */
+/* Method: CSS filter on screenshot key + black overlay on visibility change */
+.screenshot-hidden { filter: blur(40px) brightness(0) !important; }
+
+/* ═══ SWIPE NO-ACCESS SCREEN ═══ */
+.na-swipe-root {
+  width:100%; height:100%; position:relative; overflow:hidden; min-height:780px;
+}
+.na-page {
+  position:absolute; inset:0;
+  display:flex; align-items:center; justify-content:center;
+  transition: transform 0.75s cubic-bezier(0.4,0,0.2,1), opacity 0.75s cubic-bezier(0.4,0,0.2,1);
+  will-change: transform, opacity;
+}
+#na-page1 { background:linear-gradient(170deg,#0a0a0a 0%,#161616 50%,#0d0d0d 100%); }
+#na-page2 { background:linear-gradient(160deg,#FFD600 0%,#FFCA00 50%,#FFD600 100%); }
+.na-page.page-hidden-top { transform:translateY(-100%); opacity:0; }
+.na-page.page-visible    { transform:translateY(0);     opacity:1; }
+.na-page.page-hidden-bot { transform:translateY(100%);  opacity:0; }
+
+.na-hero-content {
+  text-align:center; padding:0 28px;
+  display:flex; flex-direction:column; align-items:center; width:100%;
+}
+.na-badge {
+  font-size:11px; font-weight:900; letter-spacing:5px;
+  color:var(--yellow); text-transform:uppercase; margin-bottom:24px;
+  opacity:0; transform:translateY(18px);
+  transition: opacity 0.6s 0.15s, transform 0.6s 0.15s;
+}
+.na-title1 {
+  font-family:'Nunito',sans-serif; font-size:13px; font-weight:900;
+  color:rgba(255,255,255,0.3); text-transform:uppercase; letter-spacing:9px;
+  margin-bottom:8px; opacity:0; transform:translateY(24px);
+  transition: opacity 0.65s 0.25s, transform 0.65s 0.25s;
+}
+.na-title2 {
+  font-family:'Nunito',sans-serif; font-size:28px; font-weight:900;
+  color:#fff; text-transform:uppercase; letter-spacing:2px; line-height:1.1;
+  opacity:0; transform:translateY(28px);
+  transition: opacity 0.65s 0.4s, transform 0.65s 0.4s;
+}
+.na-title3 {
+  font-family:'Nunito',sans-serif; font-size:28px; font-weight:900;
+  color:#fff; text-transform:uppercase; letter-spacing:2px; line-height:1.1;
+  margin-bottom:20px; opacity:0; transform:translateY(28px);
+  transition: opacity 0.65s 0.55s, transform 0.65s 0.55s;
+}
+.na-divider {
+  width:52px; height:2.5px; background:var(--yellow);
+  margin:0 auto 16px; opacity:0; transform:scaleX(0); transform-origin:center;
+  transition: opacity 0.5s 0.75s, transform 0.55s 0.75s;
+}
+.na-subtitle {
+  font-size:11px; font-weight:700; color:rgba(255,255,255,0.3); letter-spacing:3px;
+  opacity:0; transform:translateY(10px);
+  transition: opacity 0.6s 0.9s, transform 0.6s 0.9s;
+}
+.na-swipe-hint {
+  margin-top:52px; display:flex; flex-direction:column; align-items:center; gap:8px;
+  font-size:11px; font-weight:700; color:rgba(255,255,255,0.3);
+  letter-spacing:2px; text-transform:uppercase;
+  opacity:0; transform:translateY(8px);
+  transition: opacity 0.6s 1.2s, transform 0.6s 1.2s;
+  cursor:pointer; user-select:none;
+}
+.na-swipe-arrow-up {
+  width:36px; height:36px; border:1.5px solid rgba(255,255,255,0.2);
+  border-radius:50%; display:flex; align-items:center; justify-content:center;
+  font-size:16px; color:rgba(255,255,255,0.5);
+  animation:pulseUp 2s ease-in-out infinite;
+}
+@keyframes pulseUp {
+  0%,100%{ transform:translateY(0);   opacity:0.4; }
+  50%    { transform:translateY(-5px); opacity:1;   }
+}
+.na-animate .na-badge,
+.na-animate .na-title1,
+.na-animate .na-title2,
+.na-animate .na-title3,
+.na-animate .na-subtitle,
+.na-animate .na-swipe-hint { opacity:1; transform:translateY(0); }
+.na-animate .na-divider { opacity:1; transform:scaleX(1); }
+
+.na-page2-content {
+  width:100%; padding:28px 24px 20px;
+  display:flex; flex-direction:column; align-items:center;
+}
+.na-p2-title {
+  font-size:12px; font-weight:900; color:rgba(0,0,0,0.35);
+  letter-spacing:5px; text-transform:uppercase; margin-bottom:12px;
+  opacity:0; transform:translateY(18px);
+  transition: opacity 0.5s 0.1s, transform 0.5s 0.1s;
+}
+.na-p2-desc {
+  font-size:14px; font-weight:600; color:rgba(0,0,0,0.5);
+  text-align:center; line-height:1.65; margin-bottom:22px;
+  opacity:0; transform:translateY(14px);
+  transition: opacity 0.5s 0.2s, transform 0.5s 0.2s;
+}
+.na-price-card {
+  background:rgba(0,0,0,0.07); border:2px solid rgba(0,0,0,0.1);
+  border-radius:22px; padding:22px; width:100%;
+  margin-bottom:14px; text-align:center; cursor:pointer;
+  opacity:0; transform:translateY(18px) scale(0.97);
+}
+.na-price-card:active { transform:scale(0.97); }
+.na-price-label {
+  font-size:10px; font-weight:900; color:rgba(0,0,0,0.35);
+  letter-spacing:3px; text-transform:uppercase; margin-bottom:10px;
+}
+.na-price-num {
+  font-family:'Nunito',sans-serif; font-size:42px; font-weight:900;
+  color:#000; line-height:1; margin-bottom:6px;
+}
+.na-price-sub { font-size:12px; font-weight:600; color:rgba(0,0,0,0.4); }
+.na-btn-main {
+  width:100%; padding:17px; border:none; border-radius:18px;
+  background:#000; color:var(--yellow);
+  font-size:16px; font-weight:900; font-family:'Nunito',sans-serif;
+  cursor:pointer; display:flex; align-items:center; justify-content:center;
+  gap:8px; margin-bottom:20px;
+  opacity:0; transform:translateY(16px);
+  transition: background 0.15s;
+}
+.na-btn-main:hover { background:#1a1a1a; }
+.na-btn-main:active { transform:scale(0.97) !important; }
+
+.na-swipe-down-hint {
+  display:flex; flex-direction:column; align-items:center; gap:8px;
+  font-size:11px; font-weight:700; color:rgba(0,0,0,0.3);
+  letter-spacing:2px; text-transform:uppercase;
+  opacity:0; cursor:pointer; user-select:none;
+  transition: opacity 0.5s 0.65s;
+}
+.na-swipe-arrow-down {
+  width:36px; height:36px; border:1.5px solid rgba(0,0,0,0.15);
+  border-radius:50%; display:flex; align-items:center; justify-content:center;
+  font-size:16px; color:rgba(0,0,0,0.35);
+  animation:pulseDown 2s ease-in-out infinite;
+}
+@keyframes pulseDown {
+  0%,100%{ transform:translateY(0);  opacity:0.4; }
+  50%    { transform:translateY(4px); opacity:1;   }
+}
+.na-animate2 .na-p2-title    { opacity:1; transform:translateY(0); transition: opacity 0.5s 0.1s,  transform 0.5s 0.1s;  }
+.na-animate2 .na-p2-desc     { opacity:1; transform:translateY(0); transition: opacity 0.5s 0.22s, transform 0.5s 0.22s; }
+.na-animate2 .na-price-card  { opacity:1; transform:translateY(0) scale(1); transition: opacity 0.5s 0.35s, transform 0.5s 0.35s; }
+.na-animate2 .na-btn-main    { opacity:1; transform:translateY(0); transition: opacity 0.5s 0.48s, transform 0.5s 0.48s; }
+.na-animate2 .na-swipe-down-hint { opacity:1; }
+.na-swipe-root.dragging .na-page { transition:none !important; }
+
+/* ═══ OLD NOACCESS CSS (keep for settings compat) ═══ */
+.noaccess-sub { font-size:13px; color:#666; font-weight:600; line-height:1.7; margin-bottom:20px; }
+.noaccess-card { background:#fff; border:2px solid var(--yellow); border-radius:20px; padding:18px; width:100%; margin-bottom:14px; }
+.noaccess-card-title { font-size:11px; font-weight:800; color:#888; margin-bottom:8px; text-transform:uppercase; }
+.noaccess-price { font-size:34px; font-weight:900; color:#000; }
+.noaccess-price-sub { font-size:11px; color:#888; font-weight:600; margin-top:4px; }
+.noaccess-btn { background:var(--yellow); border:none; border-radius:16px; width:100%; padding:15px; font-size:15px; font-weight:900; color:#000; cursor:pointer; font-family:'Nunito',sans-serif; display:flex; align-items:center; justify-content:center; gap:8px; transition:background .2s; margin-bottom:10px; }
+.noaccess-btn.secondary { background:rgba(0,0,0,0.06); border:1.5px solid rgba(0,0,0,0.1); color:#555; font-size:13px; padding:13px; }
+
+/* BANNER IMAGE UPLOAD */
+.banner-img-preview {
+  width:100%; border-radius:10px; overflow:hidden;
+  margin-bottom:10px; position:relative;
+}
+.banner-img-preview img {
+  width:100%; display:block; max-height:120px; object-fit:cover;
+}
+.banner-img-remove {
+  position:absolute; top:6px; right:6px;
+  background:rgba(0,0,0,.5); color:#fff; border:none;
+  border-radius:50%; width:24px; height:24px; font-size:12px;
+  cursor:pointer; display:flex; align-items:center; justify-content:center;
+}
+.banner-type-row { display:flex; gap:6px; margin-bottom:12px; }
+.banner-type-btn {
+  flex:1; padding:8px 0; text-align:center; border-radius:8px;
+  font-size:12px; font-weight:800; color:#888;
+  background:#f5f5f5; border:1.5px solid #ddd; cursor:pointer; transition:all .15s;
+}
+.banner-type-btn.active { background:var(--dark); border-color:var(--dark); color:#fff; }
+.aq-cat-btn {
+  background:#f5f5f5; border:2px solid #e0e0e0; border-radius:10px;
+  padding:10px 8px; font-size:12px; font-weight:800; color:#555;
+  text-align:center; cursor:pointer; transition:all .15s;
+}
+.aq-cat-btn:hover { border-color:var(--yellow); background:#fffde7; }
+.aq-cat-btn.active { background:var(--yellow); border-color:var(--yd); color:#000; }
+
+.aq-lang-tab-row { display:flex; gap:6px; margin-bottom:10px; }
+.aq-lang-tab {
+  flex:1; padding:8px 0; text-align:center;
+  background:#f5f5f5; border:1.5px solid #ddd; border-radius:8px;
+  font-size:12px; font-weight:800; color:#888; cursor:pointer; transition:all .15s;
+}
+.aq-lang-tab.active { background:var(--dark); border-color:var(--dark); color:#fff; }
+
+.aq-textarea {
+  width:100%; min-height:80px; background:#f5f5f5; border:1.5px solid #ddd;
+  border-radius:10px; padding:10px 12px; font-size:14px; font-family:'Nunito',sans-serif;
+  outline:none; color:#333; font-weight:600; resize:vertical; line-height:1.5;
+}
+.aq-textarea:focus { border-color:#7C83FD; background:#fff; }
+
+.aq-toggle-row { display:flex; gap:6px; }
+.aq-toggle-btn {
+  flex:1; padding:9px 0; text-align:center; border-radius:8px;
+  font-size:12px; font-weight:800; color:#888;
+  background:#f5f5f5; border:1.5px solid #ddd; cursor:pointer; transition:all .15s;
+}
+.aq-toggle-btn.active { background:var(--dark); border-color:var(--dark); color:#fff; }
+
+.aq-upload-box {
+  border:2px dashed #ddd; border-radius:12px; padding:20px;
+  display:flex; flex-direction:column; align-items:center; cursor:pointer;
+  transition:all .2s; background:#fafafa;
+}
+.aq-upload-box:hover { border-color:var(--yellow); background:#fffde7; }
+
+.aq-add-btn {
+  background:#f0f0f0; border:1.5px dashed #ccc; border-radius:8px;
+  width:100%; padding:10px; font-size:13px; font-weight:800; color:#666;
+  cursor:pointer; font-family:'Nunito',sans-serif; margin-top:4px;
+  transition:all .15s;
+}
+.aq-add-btn:hover { background:#fffde7; border-color:var(--yellow); color:#000; }
+
+/* ANSWER ITEM in form */
+.ans-form-item {
+  background:#fff; border:1.5px solid #e0e0e0; border-radius:12px;
+  padding:10px 12px; margin-bottom:8px; display:flex; align-items:center; gap:10px;
+  transition:all .15s;
+}
+.ans-form-item.is-correct { border-color:var(--green); background:var(--green-l); }
+.ans-correct-btn {
+  width:28px; height:28px; min-width:28px; border-radius:50%;
+  border:2px solid #ccc; display:flex; align-items:center; justify-content:center;
+  font-size:11px; font-weight:900; color:#999; cursor:pointer; transition:all .15s;
+  flex-shrink:0;
+}
+.ans-form-item.is-correct .ans-correct-btn { background:var(--green); border-color:var(--green); color:#fff; }
+.ans-form-input {
+  flex:1; border:none; outline:none; font-size:13px; font-weight:700;
+  font-family:'Nunito',sans-serif; color:#333; background:transparent;
+}
+.ans-del-btn { color:#ccc; font-size:16px; cursor:pointer; flex-shrink:0; padding:0 2px; }
+.ans-del-btn:hover { color:var(--red); }
+
+</style>
+</head>
+<body>
+<div class="phone">
+<div class="statusbar" id="main-statusbar" style="background:var(--yellow);color:#000;"><span>9:41</span><span>📶 🔋</span></div>
+
+<!-- ═══ HOME ═══ -->
+<div class="screen" id="sc-home">
+  <!-- YELLOW HEADER -->
+  <div class="app-header" style="flex-direction:column;padding:12px 18px 14px;gap:0;">
+    <div style="width:100%;display:flex;align-items:center;justify-content:space-between;">
+      <span style="opacity:0;width:44px"></span>
+      <span id="home-logo" onclick="logoTap()" style="cursor:pointer;user-select:none;text-align:center;">
+        <span style="font-size:9px;font-weight:800;color:rgba(0,0,0,0.4);letter-spacing:3px;display:block;text-transform:uppercase;margin-bottom:1px;">KOREYA</span>
+        <span style="font-size:17px;font-weight:900;color:#000;letter-spacing:0.5px;display:block;line-height:1.15;text-transform:uppercase;">Haydovchilik<br>Guvohnomasi</span>
+      </span>
+      <span class="hdr-right" onclick="goScreen('sc-lang')" style="position:static;font-size:11px;padding:5px 8px;">🌐 Til</span>
+    </div>
+  </div>
+  <!-- BANNER -->
+  <div class="home-banner">
+    <div class="banner-bg"></div>
+    <div class="banner-body">
+      <div class="banner-tag">🎉 YANGI</div>
+      <div class="banner-title">Imtihon to'lovini<br><span>to'liq qoplaymiz!</span></div>
+      <div class="banner-sub">Dream YoungHana+ karta egalariga</div>
+    </div>
+    <div class="banner-side">🏆</div>
+    <div class="banner-dots"><div class="bdot on"></div><div class="bdot"></div></div>
+  </div>
+  <!-- 2 CARDS -->
+  <div class="home-grid">
+    <div class="home-card" onclick="goScreen('sc-cat');setCatMode('study')">
+      <div class="card-bubble">Test kabi<br>yechamiz!</div>
+      <div class="card-ico">🎯</div>
+      <div class="card-bar"><div class="card-label">Test qilish</div></div>
+    </div>
+    <div class="home-card" style="background:#ffe066" onclick="goScreen('sc-cat');setCatMode('memo')">
+      <div class="card-bubble">Turlar bo'yicha<br>o'rganamiz!</div>
+      <div class="card-ico">📚</div>
+      <div class="card-bar"><div class="card-label">O'rganish</div></div>
+    </div>
+  </div>
+  <!-- MENU ITEMS -->
+  <div class="home-menu">
+    <div class="home-menu-item" onclick="goScreen('sc-yoriq')">
+      <div class="hmi-ico blue">📋</div>
+      <div>
+        <div class="hmi-title">Qanday topshirish kerak?</div>
+        <div class="hmi-sub">Imtihon tartibi va yo'riqnomasi</div>
+      </div>
+      <div class="hmi-arrow">›</div>
+    </div>
+    <div class="home-menu-item" onclick="goScreen('sc-manzil')">
+      <div class="hmi-ico orange">📍</div>
+      <div>
+        <div class="hmi-title">Imtihon markazlari</div>
+        <div class="hmi-sub">Yaqinıngizdagi manzillar</div>
+      </div>
+      <div class="hmi-arrow">›</div>
+    </div>
+  </div>
+  <!-- BOTTOM TAB -->
+  <div class="btab">
+    <div class="btab-item active" onclick="goScreen('sc-home')">
+      <div class="btab-ico">🏠</div>
+      <div class="btab-lbl">Bosh sahifa</div>
+    </div>
+    <div class="btab-divider"></div>
+    <div class="btab-item" onclick="contactAdmin()">
+      <div class="btab-ico">💬</div>
+      <div class="btab-lbl">Admin bilan bog'lanish</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ TIL ═══ -->
+<div class="screen" id="sc-lang">
+  <div class="app-header">
+    <span class="hdr-back" onclick="goScreen('sc-home')">‹</span>
+    <span class="hdr-title">Til tanlash</span>
+  </div>
+  <div class="lang-body">
+    <div class="lang-big">Savollar tilini tanlang</div>
+    <div class="lang-sub2">Faqat savol va javoblar matni o'zgaradi</div>
+    <div class="lang-note">⚠️ <strong>Eslatma:</strong> Interfeys (tugmalar, menyular) har doim <strong>O'zbekcha</strong> bo'ladi. Faqat savol va javob <strong>matni</strong> tanlangan tilda ko'rsatiladi.</div>
+    <div class="lang-btn sel" onclick="selLang('ko',this)">
+      <div class="lang-flag">🇰🇷</div>
+      <div class="lang-info"><div class="lang-name">한국어</div><div class="lang-nat">Koreyscha (asosiy)</div></div>
+      <div class="lang-ck">✓</div>
+    </div>
+    <div class="lang-btn" onclick="selLang('en',this)">
+      <div class="lang-flag">🇬🇧</div>
+      <div class="lang-info"><div class="lang-name">English</div><div class="lang-nat">Inglizcha</div></div>
+      <div class="lang-ck">✓</div>
+    </div>
+    <div class="lang-btn" onclick="selLang('uz',this)">
+      <div class="lang-flag">🇺🇿</div>
+      <div class="lang-info"><div class="lang-name">O'zbekcha</div><div class="lang-nat">Faqat o'zbekcha</div></div>
+      <div class="lang-ck">✓</div>
+    </div>
+    <button class="lang-save" onclick="goScreen('sc-home')">✅ Saqlash va orqaga</button>
+  </div>
+</div>
+
+<!-- ═══ YO'RIQNOMA ═══ -->
+<div class="screen" id="sc-yoriq">
+  <div class="app-header">
+    <span class="hdr-back" onclick="goScreen('sc-home')">‹</span>
+    <span class="hdr-title">Qanday topshirish kerak?</span>
+  </div>
+  <div class="info-body">
+    <div class="info-section">
+      <div class="info-sec-title">📋 Imtihon bosqichlari</div>
+      <div class="info-item">
+        <div class="info-num">1</div>
+        <div class="info-txt">
+          <div class="info-title">Hujjatlar tayyorlash</div>
+          <div class="info-desc">Pasport yoki ARC karta, tibbiy ma'lumotnoma (1 oy ichida olingan)</div>
+        </div>
+      </div>
+      <div class="info-item">
+        <div class="info-num">2</div>
+        <div class="info-txt">
+          <div class="info-title">Ro'yxatdan o'tish</div>
+          <div class="info-desc">Yaqin haydovchilik markaziga boring yoki Internet Safedriving saytida onlayn ro'yxatdan o'ting</div>
+        </div>
+      </div>
+      <div class="info-item">
+        <div class="info-num">3</div>
+        <div class="info-txt">
+          <div class="info-title">Nazariy imtihon (필기)</div>
+          <div class="info-desc">Kompyuter orqali test. 40 ta savol, 70 ball kerak (100 baldan). 50 daqiqa vaqt beriladi</div>
+        </div>
+      </div>
+      <div class="info-item">
+        <div class="info-num">4</div>
+        <div class="info-txt">
+          <div class="info-title">Haydovchilik maydoni imtihoni</div>
+          <div class="info-desc">Maxsus maydon. 80 ball kerak. Marta-marta qaytadan topshirish mumkin</div>
+        </div>
+      </div>
+      <div class="info-item">
+        <div class="info-num">5</div>
+        <div class="info-txt">
+          <div class="info-title">Ko'cha imtihoni</div>
+          <div class="info-desc">Haqiqiy ko'chada haydash. 70 ball kerak. Inspektör yonida o'tiradi</div>
+        </div>
+      </div>
+      <div class="info-item">
+        <div class="info-num">6</div>
+        <div class="info-txt">
+          <div class="info-title">Guvohnoma olish</div>
+          <div class="info-desc">Barcha bosqichlardan o'tgach, imtihon markazida guvohnomani olasiz</div>
+        </div>
+      </div>
+    </div>
+    <div class="info-section">
+      <div class="info-sec-title">💰 To'lov miqdorlari</div>
+      <div class="info-item">
+        <div class="info-num" style="background:#e3f2fd;color:#1565c0">₩</div>
+        <div class="info-txt">
+          <div class="info-title">Nazariy imtihon — 10,000₩</div>
+          <div class="info-desc">Har bir urinish uchun to'lanadi</div>
+        </div>
+      </div>
+      <div class="info-item">
+        <div class="info-num" style="background:#e3f2fd;color:#1565c0">₩</div>
+        <div class="info-txt">
+          <div class="info-title">Maydon imtihoni — 25,000₩</div>
+          <div class="info-desc">Har bir urinish uchun to'lanadi</div>
+        </div>
+      </div>
+      <div class="info-item">
+        <div class="info-num" style="background:#e3f2fd;color:#1565c0">₩</div>
+        <div class="info-txt">
+          <div class="info-title">Ko'cha imtihoni — 25,000₩</div>
+          <div class="info-desc">Har bir urinish uchun to'lanadi</div>
+        </div>
+      </div>
+    </div>
+    <div style="height:20px"></div>
+  </div>
+</div>
+
+<!-- ═══ MANZILLAR ═══ -->
+<div class="screen" id="sc-manzil">
+  <div class="app-header">
+    <span class="hdr-back" onclick="goScreen('sc-home')">‹</span>
+    <span class="hdr-title">Imtihon markazlari</span>
+  </div>
+  <div class="info-body">
+    <div class="info-section">
+      <div class="info-sec-title">🗺️ Seul va atrofi</div>
+      <div class="addr-item">
+        <div class="addr-city"><span class="pin">📍</span> Gangnam haydovchilik markazi</div>
+        <div class="addr-addr">서울 강남구 테헤란로 108길 12 — Seoul, Gangnam-gu</div>
+        <div class="addr-tags">
+          <span class="addr-tag open">🟢 Ochiq</span>
+          <span class="addr-tag">09:00–18:00</span>
+          <span class="addr-tag">2-toifa ✓</span>
+        </div>
+      </div>
+      <div class="addr-item">
+        <div class="addr-city"><span class="pin">📍</span> Dobong haydovchilik markazi</div>
+        <div class="addr-addr">서울 도봉구 마들로 656 — Seoul, Dobong-gu</div>
+        <div class="addr-tags">
+          <span class="addr-tag open">🟢 Ochiq</span>
+          <span class="addr-tag">09:00–18:00</span>
+          <span class="addr-tag">1-toifa ✓</span>
+        </div>
+      </div>
+    </div>
+    <div class="info-section">
+      <div class="info-sec-title">🗺️ Gyeonggi viloyati</div>
+      <div class="addr-item">
+        <div class="addr-city"><span class="pin">📍</span> Suwon haydovchilik markazi</div>
+        <div class="addr-addr">경기 수원시 권선구 수인로 126 — Suwon, Gwonseon-gu</div>
+        <div class="addr-tags">
+          <span class="addr-tag open">🟢 Ochiq</span>
+          <span class="addr-tag">08:00–18:00</span>
+          <span class="addr-tag">1,2-toifa ✓</span>
+        </div>
+      </div>
+      <div class="addr-item">
+        <div class="addr-city"><span class="pin">📍</span> Ansan haydovchilik markazi</div>
+        <div class="addr-addr">경기 안산시 단원구 광덕서로 180 — Ansan</div>
+        <div class="addr-tags">
+          <span class="addr-tag" style="background:#fff3e0;color:#e65100">🔴 Yakshanba yopiq</span>
+          <span class="addr-tag">09:00–17:00</span>
+        </div>
+      </div>
+    </div>
+    <div style="height:20px"></div>
+  </div>
+</div>
+
+<!-- ═══ CATEGORIES ═══ -->
+<div class="screen" id="sc-cat">
+  <div class="app-header">
+    <span class="hdr-back" onclick="goScreen('sc-home')">‹</span>
+    <span class="hdr-title" id="cat-title">유형별 학습하기</span>
+  </div>
+  <div class="mode-bar">
+    <button class="mode-btn on" id="mb-study" onclick="switchMode('study')">문제풀이 MODE</button>
+    <button class="mode-btn off" id="mb-memo" onclick="switchMode('memo')">속성암기 MODE</button>
+  </div>
+  <div class="cat-list">
+    <div class="cat-item feat" onclick="openCat('top100')">
+      <div class="cat-ico" style="background:#FFF9E6;border-color:#FFD600;"><svg width="20" height="20" fill="none" stroke="#F59E0B" stroke-width="2" stroke-linecap="round" viewBox="0 0 24 24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg></div>
+      <div class="cat-info"><div class="cat-name">즐겨찾기 TOP100</div><div class="cat-sub">Eng ko'p so'ralgan 100 ta savol</div></div>
+      <div class="cat-right"><div class="cat-cnt"><span class="done">0</span> / 100</div><div class="cat-pb"><div class="cat-pf" style="width:0%"></div></div></div>
+    </div>
+    <div class="cat-item" onclick="openCat('s1')">
+      <div class="cat-ico" style="background:#EFF6FF;border-color:#BFDBFE;"><svg width="18" height="18" fill="none" stroke="#2563EB" stroke-width="2" stroke-linecap="round" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
+      <div class="cat-info"><div class="cat-name">Sentence <span style="color:#aaa;font-size:12px">(4지 1답)</span></div><div class="cat-sub">Matnli • 1 to'g'ri • 2점</div></div>
+      <div class="cat-right"><div class="cat-cnt"><span class="done">0</span> / 513</div><div class="cat-pb"><div class="cat-pf" style="width:0%"></div></div></div>
+    </div>
+    <div class="cat-item" onclick="openCat('s2')">
+      <div class="cat-ico" style="background:#EFF6FF;border-color:#BFDBFE;"><svg width="18" height="18" fill="none" stroke="#2563EB" stroke-width="2" stroke-linecap="round" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
+      <div class="cat-info"><div class="cat-name">Sentence <span style="color:#aaa;font-size:12px">(4지 2답)</span></div><div class="cat-sub">Matnli • 2 to'g'ri • 3점</div></div>
+      <div class="cat-right"><div class="cat-cnt"><span class="done">1</span> / 97</div><div class="cat-pb"><div class="cat-pf" style="width:1%"></div></div></div>
+    </div>
+    <div class="cat-item" onclick="openCat('pic')">
+      <div class="cat-ico" style="background:#F0FDF4;border-color:#BBF7D0;"><svg width="18" height="18" fill="none" stroke="#16a34a" stroke-width="2" stroke-linecap="round" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg></div>
+      <div class="cat-info"><div class="cat-name">Picture <span style="color:#aaa;font-size:12px">(5지 2답)</span></div><div class="cat-sub">Rasmli • 2 to'g'ri • 3점</div></div>
+      <div class="cat-right"><div class="cat-cnt"><span class="done">0</span> / 100</div><div class="cat-pb"><div class="cat-pf" style="width:0%"></div></div></div>
+    </div>
+    <div class="cat-item" onclick="openCat('ill')">
+      <div class="cat-ico" style="background:#FFF7ED;border-color:#FED7AA;"><svg width="18" height="18" fill="none" stroke="#ea580c" stroke-width="2" stroke-linecap="round" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div>
+      <div class="cat-info"><div class="cat-name">Illustration <span style="color:#aaa;font-size:12px">(5지 2답)</span></div><div class="cat-sub">Chizma • 2 to'g'ri • 3점</div></div>
+      <div class="cat-right"><div class="cat-cnt"><span class="done">0</span> / 85</div><div class="cat-pb"><div class="cat-pf" style="width:0%"></div></div></div>
+    </div>
+    <div class="cat-item" onclick="openCat('ss1')">
+      <div class="cat-ico" style="background:#FFF9E6;border-color:#FFD600;"><svg width="18" height="18" fill="none" stroke="#D97706" stroke-width="2" stroke-linecap="round" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+      <div class="cat-info"><div class="cat-name">Safety Sign <span style="color:#aaa;font-size:12px">(4지 1답)</span></div><div class="cat-sub">Xavfsizlik belgisi • 1 to'g'ri • 2점</div></div>
+      <div class="cat-right"><div class="cat-cnt"><span class="done">1</span> / 99</div><div class="cat-pb"><div class="cat-pf" style="width:1%"></div></div></div>
+    </div>
+    <div class="cat-item" onclick="openCat('vid')">
+      <div class="cat-ico" style="background:#F5F3FF;border-color:#DDD6FE;"><svg width="18" height="18" fill="none" stroke="#7C3AED" stroke-width="2" stroke-linecap="round" viewBox="0 0 24 24"><polygon points="23,7 16,12 23,17"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg></div>
+      <div class="cat-info"><div class="cat-name">Video <span style="color:#aaa;font-size:12px">(4지 1답)</span></div><div class="cat-sub">Video • 1 to'g'ri • 5점</div></div>
+      <div class="cat-right"><div class="cat-cnt"><span class="done">0</span> / 35</div><div class="cat-pb"><div class="cat-pf" style="width:0%"></div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ QUESTION ═══ -->
+<div class="screen" id="sc-q">
+  <div class="app-header">
+    <span class="hdr-back" onclick="goScreen('sc-cat')">‹</span>
+    <span class="hdr-title" id="q-hdr">즐겨찾기 Top100</span>
+  </div>
+  <div class="mode-bar">
+    <button class="mode-btn" id="qmb-study" onclick="qMode('study')">문제풀이 MODE</button>
+    <button class="mode-btn" id="qmb-memo" onclick="qMode('memo')">속성암기 MODE</button>
+  </div>
+  <div class="type-bar">
+    <div class="type-ico" id="t-ico">☑️</div>
+    <div><span class="type-name" id="t-name">Sentence</span><span class="type-meta" id="t-meta"> (4지 1답)</span></div>
+    <div class="type-score" id="t-score">2점</div>
+    <div class="bm-btn" onclick="this.textContent=this.textContent==='🔖'?'🔒':'🔖'">🔖</div>
+  </div>
+  <div class="q-scroll" id="q-scroll">
+    <div class="q-num-line" id="q-num"><strong>1</strong> / 5</div>
+    <div class="q-text-block">
+      <div class="q-main" id="q-main"></div>
+      <div class="q-trans" id="q-trans"></div>
+    </div>
+    <!-- AUDIO BTN -->
+    <div class="audio-btn" id="audio-btn" style="display:none" onclick="toggleAudio()">
+      <div class="audio-ico" id="audio-ico">🔊</div>
+      <div class="audio-info">
+        <div class="audio-title">Tushuntirishni tinglang</div>
+        <div class="audio-sub" id="audio-sub">Admin tomonidan yuklangan audio</div>
+      </div>
+      <div class="audio-waves" id="audio-waves">
+        <span style="height:4px"></span><span style="height:8px"></span>
+        <span style="height:12px"></span><span style="height:8px"></span>
+        <span style="height:4px"></span>
+      </div>
+    </div>
+    <div id="q-img" style="display:none" class="q-img-box">
+      <div class="q-img-ph"><div class="big" id="q-img-ico">🖼️</div><div>Bu yerda rasm ko'rsatiladi</div><div style="font-size:11px;color:#ddd">Admin paneldan yuklanadi</div></div>
+    </div>
+    <div id="q-vid" style="display:none" class="q-vid-box" onclick="alert('Video savolni rasmiy saytda ko\'ring')">
+      <div class="vid-play">▶</div><div class="vid-lbl">Saytga o'ting</div>
+      <div class="vid-spd" id="vid-spd">00 km/h</div>
+    </div>
+    <div id="q-road" style="display:none" class="road-box">
+      <div class="road-title">도로상황 / Yo'l holati</div>
+      <div id="road-items"></div>
+    </div>
+    <div class="ans-wrap" id="ans-wrap"></div>
+  </div>
+  <div class="q-nav-bar">
+    <div class="qnav-s" id="qnav-p" onclick="qPrev()">‹ Oldingi</div>
+    <div class="qnav-c"><span class="qnav-n" id="qnav-n">1 <span class="qnav-t">/ 5</span></span><span class="qnav-a">▲</span></div>
+    <div class="qnav-s r" id="qnav-nx" onclick="qNext()">Keyingi ›</div>
+  </div>
+</div>
+
+<!-- ═══ RESULT SCREEN ═══ -->
+<div class="screen" id="sc-result">
+  <div class="app-header">
+    <span class="hdr-back" onclick="backFromResult()">‹</span>
+    <span class="hdr-title">Test natijalari</span>
+  </div>
+  <canvas id="confetti-canvas" style="position:fixed;inset:0;pointer-events:none;z-index:9998;display:none;"></canvas>
+  <div style="flex:1;overflow-y:auto;background:var(--bg);">
+    <div id="result-score-card" style="margin:16px 14px 0;border-radius:22px;overflow:hidden;"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:12px 14px 0;">
+      <div style="background:#fff;border:1px solid var(--bdr);border-radius:16px;padding:16px;text-align:center;">
+        <div style="font-size:28px;font-weight:900;color:#2e7d32;" id="res-correct">0</div>
+        <div style="font-size:11px;font-weight:700;color:#888;margin-top:3px;text-transform:uppercase;">✅ To'g'ri</div>
+      </div>
+      <div style="background:#fff;border:1px solid var(--bdr);border-radius:16px;padding:16px;text-align:center;">
+        <div style="font-size:28px;font-weight:900;color:#c62828;" id="res-wrong">0</div>
+        <div style="font-size:11px;font-weight:700;color:#888;margin-top:3px;text-transform:uppercase;">❌ Xato</div>
+      </div>
+    </div>
+    <div id="wrong-section" style="padding:12px 14px 0;"></div>
+    <div style="padding:16px 14px 32px;display:flex;flex-direction:column;gap:10px;">
+      <button onclick="retryTest()" style="background:var(--yellow);border:none;border-radius:16px;padding:15px;font-size:15px;font-weight:900;color:#000;cursor:pointer;font-family:'Nunito',sans-serif;">🔄 Qayta topshirish</button>
+      <button onclick="goScreen('sc-cat')" style="background:#fff;border:2px solid var(--bdr);border-radius:16px;padding:14px;font-size:14px;font-weight:800;color:#333;cursor:pointer;font-family:'Nunito',sans-serif;">📋 Kategoriyaga qaytish</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ NO ACCESS SCREEN ═══ -->
+<div class="screen" id="sc-noaccess" style="position:relative;overflow:hidden;">
+
+  <!-- SCREENSHOT PROTECTION OVERLAY -->
+  <div id="ss-protect" style="
+    display:none; position:fixed; inset:0; z-index:9999;
+    background:#000; pointer-events:none;
+  "></div>
+
+  <!-- FULL SCREEN SWIPE CONTAINER -->
+  <div class="na-swipe-root" id="na-swipe-root">
+
+    <!-- PAGE 1: BRAND / HERO -->
+    <div class="na-page" id="na-page1">
+      <div id="noaccess-bg" style="position:absolute;inset:0;background-size:cover;background-position:center;opacity:0.15;pointer-events:none;display:none;"></div>
+      <div class="na-hero-content">
+        <div class="na-badge" id="na-badge">운전면허</div>
+        <div class="na-title1" id="na-title1">KOREYA</div>
+        <div class="na-title2" id="na-title2">HAYDOVCHILIK</div>
+        <div class="na-title3" id="na-title3">GUVOHNOMASI</div>
+        <div class="na-divider" id="na-divider"></div>
+        <div class="na-subtitle" id="na-subtitle">운전면허 • Driver's License</div>
+        <div class="na-swipe-hint" id="na-swipe-hint">
+          <div class="na-swipe-arrow-up">↑</div>
+          <div>Yuqoriga suring</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE 2: PRICE + BUTTONS -->
+    <div class="na-page" id="na-page2">
+      <div class="na-page2-content">
+        <div class="na-p2-title" id="na-p2-title">Kirish uchun</div>
+        <div class="na-p2-desc" id="noaccess-desc">Botdan foydalanish uchun to'lovni amalga oshiring va admin bilan bog'laning.</div>
+
+        <div class="na-price-card" id="noaccess-card-price" onclick="priceTap()">
+          <div class="na-price-label">💎 KIRISH NARXI</div>
+          <div class="na-price-num" id="noaccess-price-display">29,900 ₩</div>
+          <div class="na-price-sub" id="noaccess-price-sub">Bir martalik to'lov • Cheksiz foydalanish</div>
+          <div id="price-tap-hint" style="display:none;font-size:10px;color:rgba(255,255,255,0.4);margin-top:6px;font-weight:700;letter-spacing:2px;"></div>
+        </div>
+
+        <button class="na-btn-main" id="na-btn" onclick="contactAdmin()">
+          <span>💬</span> Admin bilan bog'lanish
+        </button>
+
+        <div class="na-swipe-down-hint" onclick="swipeTo(0)">
+          <div class="na-swipe-arrow-down">↓</div>
+          <div>Pastga suring</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══ PIN SCREEN (FRONT — foydalanuvchi kirishi) ═══ -->
+<div class="screen" id="sc-pin-front">
+  <div class="app-header" style="background:#1a1a2e;">
+    <span class="hdr-back" onclick="goScreen('sc-noaccess')" style="background:rgba(255,255,255,.1);color:#fff">‹</span>
+    <span class="hdr-title" style="color:rgba(255,255,255,.7);font-size:14px">Kirish</span>
+  </div>
+  <div class="pin-screen-body">
+    <div class="pin-lock-ico">🚗</div>
+    <div class="pin-title" style="color:#fff;">Kirish kodi</div>
+    <div class="pin-sub">Admin tomonidan berilgan 4 xonali kodni kiriting</div>
+    <div class="pin-dots" id="pin-dots-front">
+      <div class="pin-dot" id="pf0"></div>
+      <div class="pin-dot" id="pf1"></div>
+      <div class="pin-dot" id="pf2"></div>
+      <div class="pin-dot" id="pf3"></div>
+    </div>
+    <div class="pin-keypad">
+      <div class="pin-key" onclick="pinFrontKey('1')"><div class="pin-key-num">1</div><div class="pin-key-letters"></div></div>
+      <div class="pin-key" onclick="pinFrontKey('2')"><div class="pin-key-num">2</div><div class="pin-key-letters">ABC</div></div>
+      <div class="pin-key" onclick="pinFrontKey('3')"><div class="pin-key-num">3</div><div class="pin-key-letters">DEF</div></div>
+      <div class="pin-key" onclick="pinFrontKey('4')"><div class="pin-key-num">4</div><div class="pin-key-letters">GHI</div></div>
+      <div class="pin-key" onclick="pinFrontKey('5')"><div class="pin-key-num">5</div><div class="pin-key-letters">JKL</div></div>
+      <div class="pin-key" onclick="pinFrontKey('6')"><div class="pin-key-num">6</div><div class="pin-key-letters">MNO</div></div>
+      <div class="pin-key" onclick="pinFrontKey('7')"><div class="pin-key-num">7</div><div class="pin-key-letters">PQRS</div></div>
+      <div class="pin-key" onclick="pinFrontKey('8')"><div class="pin-key-num">8</div><div class="pin-key-letters">TUV</div></div>
+      <div class="pin-key" onclick="pinFrontKey('9')"><div class="pin-key-num">9</div><div class="pin-key-letters">WXYZ</div></div>
+      <div class="pin-key empty"></div>
+      <div class="pin-key" onclick="pinFrontKey('0')"><div class="pin-key-num">0</div><div class="pin-key-letters"></div></div>
+      <div class="pin-key del" onclick="pinFrontDel()"><div class="pin-key-num" style="font-size:18px">⌫</div></div>
+    </div>
+    <div class="pin-error-msg" id="pin-front-err"></div>
+  </div>
+</div>
+
+<!-- ═══ PIN SCREEN (ADMIN) ═══ -->
+<div class="screen" id="sc-pin">
+  <div class="app-header" style="background:#1a1a2e;">
+    <span class="hdr-back" onclick="goScreen('sc-home')" style="background:rgba(255,255,255,.1);color:#fff">‹</span>
+    <span class="hdr-title" style="color:rgba(255,255,255,.6);font-size:14px">Xavfsiz kirish</span>
+  </div>
+  <div class="pin-screen-body">
+    <div class="pin-lock-ico">🔐</div>
+    <div class="pin-title">Admin Panel</div>
+    <div class="pin-sub">4 xonali PIN kodingizni kiriting</div>
+    <div class="pin-dots" id="pin-dots">
+      <div class="pin-dot" id="pd0"></div>
+      <div class="pin-dot" id="pd1"></div>
+      <div class="pin-dot" id="pd2"></div>
+      <div class="pin-dot" id="pd3"></div>
+    </div>
+    <div class="pin-keypad">
+      <div class="pin-key" onclick="pinKey('1')"><div class="pin-key-num">1</div><div class="pin-key-letters"></div></div>
+      <div class="pin-key" onclick="pinKey('2')"><div class="pin-key-num">2</div><div class="pin-key-letters">ABC</div></div>
+      <div class="pin-key" onclick="pinKey('3')"><div class="pin-key-num">3</div><div class="pin-key-letters">DEF</div></div>
+      <div class="pin-key" onclick="pinKey('4')"><div class="pin-key-num">4</div><div class="pin-key-letters">GHI</div></div>
+      <div class="pin-key" onclick="pinKey('5')"><div class="pin-key-num">5</div><div class="pin-key-letters">JKL</div></div>
+      <div class="pin-key" onclick="pinKey('6')"><div class="pin-key-num">6</div><div class="pin-key-letters">MNO</div></div>
+      <div class="pin-key" onclick="pinKey('7')"><div class="pin-key-num">7</div><div class="pin-key-letters">PQRS</div></div>
+      <div class="pin-key" onclick="pinKey('8')"><div class="pin-key-num">8</div><div class="pin-key-letters">TUV</div></div>
+      <div class="pin-key" onclick="pinKey('9')"><div class="pin-key-num">9</div><div class="pin-key-letters">WXYZ</div></div>
+      <div class="pin-key empty"></div>
+      <div class="pin-key" onclick="pinKey('0')"><div class="pin-key-num">0</div><div class="pin-key-letters"></div></div>
+      <div class="pin-key del" onclick="pinDel()"><div class="pin-key-num" style="font-size:18px">⌫</div></div>
+    </div>
+    <div class="pin-error-msg" id="pin-err"></div>
+  </div>
+</div>
+
+<!-- ═══ ADMIN PANEL (yashirin) ═══ -->
+<div class="screen" id="sc-admin">
+  <div class="app-header" style="background:#1a1a2e;">
+    <span class="hdr-back" onclick="goScreen('sc-home')" style="background:rgba(124,131,253,.2)">‹</span>
+    <span class="hdr-title" style="color:#7C83FD;">🔐 Admin Panel</span>
+  </div>
+  <div class="admin-screen-body">
+    <!-- BADGE -->
+    <div class="admin-header-badge">
+      <div class="admin-lock-ico">👨‍💼</div>
+      <div class="admin-badge-title">Super Admin</div>
+      <div class="admin-badge-sub">Barcha boshqaruv huquqlari</div>
+    </div>
+    <!-- STATS -->
+    <div class="admin-stats">
+      <div class="admin-stat"><div class="admin-stat-num">47</div><div class="admin-stat-lbl">Foydalanuvchi</div></div>
+      <div class="admin-stat"><div class="admin-stat-num" style="color:var(--green)">12</div><div class="admin-stat-lbl">Aktiv</div></div>
+      <div class="admin-stat"><div class="admin-stat-num" style="color:var(--yd)">238</div><div class="admin-stat-lbl">Savollar</div></div>
+    </div>
+    <!-- ACTIVATE USER -->
+    <div class="admin-section">
+      <div class="admin-sec-lbl">✅ Foydalanuvchi aktivlashtirish</div>
+      <div class="admin-form">
+        <input class="admin-input" type="number" placeholder="Telegram ID (masalan: 987654321)" id="act-input">
+        <button class="admin-go green-btn" onclick="activateUser()">Aktivlashtirish</button>
+      </div>
+    </div>
+    <!-- MANAGEMENT -->
+    <div class="admin-section">
+      <div class="admin-sec-lbl">🛠️ Boshqaruv</div>
+      <div class="admin-item" onclick="goScreen('sc-settings')">
+        <div class="admin-ico" style="background:#e8eaf6;">⚙️</div>
+        <div class="admin-item-info">
+          <div class="admin-item-title">Bot sozlamalari</div>
+          <div class="admin-item-sub">Narx, admin username, kirish sahifasi</div>
+        </div>
+        <div class="admin-item-arrow">›</div>
+      </div>
+      <div class="admin-item" onclick="goScreen('sc-add-q')">
+        <div class="admin-ico green">➕</div>
+        <div class="admin-item-info">
+          <div class="admin-item-title">Savol qo'shish</div>
+          <div class="admin-item-sub">Kategoriya, rasm/video, variantlar</div>
+        </div>
+        <div class="admin-item-arrow">›</div>
+      </div>
+      <div class="admin-item" onclick="goScreen('sc-banner-edit')">
+        <div class="admin-ico purple">📣</div>
+        <div class="admin-item-info">
+          <div class="admin-item-title">Reklama banneri</div>
+          <div class="admin-item-sub">Bosh sahifadagi banner matni</div>
+        </div>
+        <div class="admin-item-arrow">›</div>
+      </div>
+      <div class="admin-item" onclick="goScreen('sc-yoriq')">
+        <div class="admin-ico blue">📋</div>
+        <div class="admin-item-info">
+          <div class="admin-item-title">Yo'riqnoma & Manzillar</div>
+          <div class="admin-item-sub">Bosh sahifa ma'lumotlarini yangilash</div>
+        </div>
+        <div class="admin-item-arrow">›</div>
+      </div>
+    </div>
+    <!-- USERS LIST -->
+    <div class="admin-section">
+      <div class="admin-sec-lbl">👥 So'nggi foydalanuvchilar</div>
+      <div class="admin-item" id="ulist">
+        <div class="admin-ico green" style="background:var(--yellow);color:#000;font-weight:900">A</div>
+        <div class="admin-item-info">
+          <div class="admin-item-title">Alisher Nazarov</div>
+          <div class="admin-item-sub">ID: 111222333 · ✅ Aktiv</div>
+        </div>
+      </div>
+      <div class="admin-item">
+        <div class="admin-ico" style="background:#f5f5f5;color:#888;font-weight:900">Z</div>
+        <div class="admin-item-info">
+          <div class="admin-item-title">Zulfiya Karimova</div>
+          <div class="admin-item-sub">ID: 444555666 · ⏳ Kutmoqda</div>
+        </div>
+      </div>
+      <div class="admin-item">
+        <div class="admin-ico" style="background:#e3f2fd;color:#1565c0;font-weight:900">D</div>
+        <div class="admin-item-info">
+          <div class="admin-item-title">Davron Toshmatov</div>
+          <div class="admin-item-sub">ID: 777888999 · ✅ Aktiv</div>
+        </div>
+      </div>
+    </div>
+    <div style="height:20px"></div>
+  </div>
+</div>
+
+<!-- ═══ SAVOL QO'SHISH ═══ -->
+<div class="screen" id="sc-add-q">
+  <div class="app-header" style="background:#1a1a2e;">
+    <span class="hdr-back" onclick="goScreen('sc-admin')" style="background:rgba(124,131,253,.2)">‹</span>
+    <span class="hdr-title" style="color:#7C83FD;">➕ Savol qo'shish</span>
+  </div>
+  <div class="admin-screen-body" id="add-q-body">
+
+    <!-- 1. KATEGORIYA -->
+    <div class="admin-section">
+      <div class="admin-sec-lbl">1️⃣ Kategoriya tanlang</div>
+      <div style="padding:12px 14px;display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <div class="aq-cat-btn active" onclick="selectCat(this,'top100')">⭐ TOP 100</div>
+        <div class="aq-cat-btn" onclick="selectCat(this,'s1')">☑️ Sentence (1답)</div>
+        <div class="aq-cat-btn" onclick="selectCat(this,'s2')">☑️ Sentence (2답)</div>
+        <div class="aq-cat-btn" onclick="selectCat(this,'pic')">🖼️ Picture</div>
+        <div class="aq-cat-btn" onclick="selectCat(this,'ill')">✏️ Illustration</div>
+        <div class="aq-cat-btn" onclick="selectCat(this,'ss1')">🚦 Safety Sign</div>
+        <div class="aq-cat-btn" onclick="selectCat(this,'vid')">▶️ Video</div>
+      </div>
+    </div>
+
+    <!-- 2. SAVOL MATNI -->
+    <div class="admin-section">
+      <div class="admin-sec-lbl">2️⃣ Savol matni</div>
+      <div style="padding:12px 14px;">
+        <div class="aq-lang-tab-row">
+          <div class="aq-lang-tab active" onclick="switchQLang(this,'ko')">🇰🇷 Ko</div>
+          <div class="aq-lang-tab" onclick="switchQLang(this,'en')">🇬🇧 En</div>
+          <div class="aq-lang-tab" onclick="switchQLang(this,'uz')">🇺🇿 Uz</div>
+        </div>
+        <textarea class="aq-textarea" id="q-text-ko" placeholder="Koreyscha savol matni..."></textarea>
+        <textarea class="aq-textarea" id="q-text-en" placeholder="English question text..." style="display:none"></textarea>
+        <textarea class="aq-textarea" id="q-text-uz" placeholder="O'zbekcha savol matni..." style="display:none"></textarea>
+      </div>
+    </div>
+
+    <!-- 3. RASM / VIDEO -->
+    <div class="admin-section">
+      <div class="admin-sec-lbl">3️⃣ Rasm yoki Video</div>
+      <div style="padding:12px 14px;">
+        <div class="aq-toggle-row">
+          <div class="aq-toggle-btn active" id="media-none" onclick="selectMedia('none')">❌ Yo'q</div>
+          <div class="aq-toggle-btn" id="media-img" onclick="selectMedia('img')">🖼️ Rasm</div>
+          <div class="aq-toggle-btn" id="media-vid" onclick="selectMedia('vid')">▶️ Video</div>
+        </div>
+        <div id="media-upload-area" style="display:none;margin-top:10px;">
+          <div class="aq-upload-box" onclick="document.getElementById('aq-file-input').click()">
+            <div style="font-size:32px" id="upload-ico">🖼️</div>
+            <div style="font-size:13px;font-weight:700;color:#666;margin-top:6px" id="upload-lbl">Rasm yuklash uchun bosing</div>
+            <div style="font-size:11px;color:#aaa;margin-top:3px">JPG, PNG, MP4 • max 20MB</div>
+          </div>
+          <input type="file" id="aq-file-input" style="display:none" accept="image/*,video/*" onchange="previewMedia(this)">
+          <div id="media-preview" style="display:none;margin-top:8px;border-radius:10px;overflow:hidden;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. YO'L HOLATI (Picture/Illustration/Video uchun) -->
+    <div class="admin-section" id="road-section" style="display:none">
+      <div class="admin-sec-lbl">4️⃣ Yo'l holati (道路狀況)</div>
+      <div style="padding:12px 14px;">
+        <div id="road-inputs">
+          <input class="admin-input" placeholder="• Birinchi holat..." style="margin-bottom:8px">
+        </div>
+        <button class="aq-add-btn" onclick="addRoadInput()">+ Holat qo'shish</button>
+      </div>
+    </div>
+
+    <!-- 5. IZOH -->
+    <div class="admin-section">
+      <div class="admin-sec-lbl">5️⃣ Izoh / Tushuntirish</div>
+      <div style="padding:4px 14px 12px;">
+        <div class="aq-toggle-row" style="margin-bottom:10px;">
+          <div class="aq-toggle-btn active" id="izoh-no" onclick="toggleIzoh(false)">❌ Izohsiz</div>
+          <div class="aq-toggle-btn" id="izoh-yes" onclick="toggleIzoh(true)">✅ Izoh qo'shish</div>
+        </div>
+        <div id="izoh-area" style="display:none;">
+          <textarea class="aq-textarea" id="izoh-text" placeholder="Bu savolga tushuntirish yozing..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. SIGNAL SO'ZLAR -->
+    <div class="admin-section">
+      <div class="admin-sec-lbl">6️⃣ Signal so'zlar (ixtiyoriy)</div>
+      <div style="padding:12px 14px;">
+        <input class="admin-input" id="signal-words" placeholder="masalan: tormoz yo'li, qizil chiroq" style="margin-bottom:0">
+        <div style="font-size:11px;color:#aaa;font-weight:600;margin-top:6px">Vergul bilan ajrating. Bu so'zlar sariq rang bilan belgilanadi.</div>
+      </div>
+    </div>
+
+    <!-- 7. JAVOB VARIANTLARI -->
+    <div class="admin-section">
+      <div class="admin-sec-lbl">7️⃣ Javob variantlari</div>
+      <div style="padding:12px 14px;">
+        <div class="aq-lang-tab-row" style="margin-bottom:12px;">
+          <div class="aq-lang-tab active" onclick="switchAnsLang(this,'ko')">🇰🇷 Ko</div>
+          <div class="aq-lang-tab" onclick="switchAnsLang(this,'en')">🇬🇧 En</div>
+          <div class="aq-lang-tab" onclick="switchAnsLang(this,'uz')">🇺🇿 Uz</div>
+        </div>
+        <div id="answers-list">
+          <!-- generated by JS -->
+        </div>
+        <button class="aq-add-btn" onclick="addAnswer()" id="add-ans-btn">+ Variant qo'shish</button>
+        <div style="font-size:11px;color:#aaa;font-weight:600;margin-top:8px">🟢 = To'g'ri javob. Belgilash uchun chapga suring yoki yashil doirani bosing.</div>
+      </div>
+    </div>
+
+    <!-- 8. AUDIO -->
+    <div class="admin-section">
+      <div class="admin-sec-lbl">8️⃣ Audio tushuntirish</div>
+      <div style="padding:4px 14px 14px;">
+        <div class="aq-toggle-row" style="margin-bottom:10px;">
+          <div class="aq-toggle-btn active" id="audio-no" onclick="toggleAudioUpload(false)">❌ Audiosiz</div>
+          <div class="aq-toggle-btn" id="audio-yes" onclick="toggleAudioUpload(true)">🔊 Audio yuklash</div>
+        </div>
+        <div id="audio-upload-area" style="display:none;">
+          <div class="aq-upload-box" style="background:#f0f9ff;border-color:#90caf9;" onclick="document.getElementById('aq-audio-input').click()">
+            <div style="font-size:32px">🎙️</div>
+            <div style="font-size:13px;font-weight:700;color:#1565c0;margin-top:6px" id="audio-upload-lbl">Ovozli fayl yuklash uchun bosing</div>
+            <div style="font-size:11px;color:#aaa;margin-top:3px">MP3, OGG, M4A • max 10MB</div>
+          </div>
+          <input type="file" id="aq-audio-input" style="display:none" accept="audio/*" onchange="previewAudio(this)">
+          <div id="audio-preview" style="display:none;margin-top:8px;padding:12px;background:#e3f2fd;border-radius:10px;">
+            <div style="font-size:13px;font-weight:800;color:#1565c0" id="audio-fname">audio.mp3</div>
+            <audio id="audio-player" controls style="width:100%;margin-top:8px;border-radius:8px;"></audio>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SAVE BUTTON -->
+    <div style="padding:16px 14px 32px;">
+      <button class="admin-go green-btn" onclick="saveQuestion()" style="font-size:16px;padding:16px;">
+        💾 Savolni saqlash
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ BANNER EDIT ═══ -->
+<div class="screen" id="sc-banner-edit">
+  <div class="app-header" style="background:#1a1a2e;">
+    <span class="hdr-back" onclick="goScreen('sc-admin')" style="background:rgba(124,131,253,.2)">‹</span>
+    <span class="hdr-title" style="color:#7C83FD;">📣 Reklama banneri</span>
+  </div>
+  <div class="admin-screen-body">
+    <div style="padding:16px 14px 0;">
+      <!-- LIVE PREVIEW -->
+      <div id="banner-full-preview" style="background:linear-gradient(135deg,#1b4332,#2d6a4f);border-radius:14px;padding:16px;margin-bottom:16px;overflow:hidden;position:relative;min-height:80px;">
+        <div id="banner-img-overlay" style="display:none;position:absolute;inset:0;background-size:cover;background-position:center;opacity:0.35;border-radius:14px;"></div>
+        <div style="position:relative;z-index:1;">
+          <div style="font-size:10px;color:rgba(255,255,255,.5);font-weight:700;margin-bottom:6px;">Ko'rinish:</div>
+          <div id="banner-preview-title" style="font-size:16px;font-weight:900;color:#fff;">Imtihon to'lovini</div>
+          <div id="banner-preview-span" style="font-size:16px;font-weight:900;color:#FFD600;">to'liq qoplaymiz!</div>
+          <div id="banner-preview-sub" style="font-size:11px;color:rgba(255,255,255,.6);margin-top:4px;">Dream YoungHana+ karta egalariga</div>
+        </div>
+      </div>
+    </div>
+    <div class="admin-section">
+      <div class="admin-sec-lbl">Banner turi</div>
+      <div style="padding:10px 14px;">
+        <div class="banner-type-row">
+          <div class="banner-type-btn active" id="btype-text" onclick="setBannerType('text')">📝 Matnli</div>
+          <div class="banner-type-btn" id="btype-img" onclick="setBannerType('img')">🖼️ Rasmli</div>
+          <div class="banner-type-btn" id="btype-both" onclick="setBannerType('both')">🖼️+📝 Ikkalasi</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- IMAGE UPLOAD -->
+    <div class="admin-section" id="banner-img-section" style="display:none">
+      <div class="admin-sec-lbl">🖼️ Rasm yuklash</div>
+      <div style="padding:12px 14px;">
+        <!-- Preview -->
+        <div id="banner-img-preview-wrap" style="display:none;margin-bottom:10px;border-radius:12px;overflow:hidden;position:relative;">
+          <img id="banner-img-thumb" src="" alt="" style="width:100%;max-height:130px;object-fit:cover;display:block;">
+          <button onclick="removeBannerImg()" style="position:absolute;top:8px;right:8px;background:rgba(0,0,0,.6);color:#fff;border:none;border-radius:50%;width:28px;height:28px;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;">✕</button>
+          <div style="position:absolute;bottom:8px;left:12px;font-size:11px;font-weight:700;color:rgba(255,255,255,.8);">✅ Rasm yuklandi</div>
+        </div>
+        <!-- Upload box -->
+        <div class="aq-upload-box" id="banner-upload-box" onclick="document.getElementById('banner-img-input').click()" style="display:flex;">
+          <div style="font-size:36px">🖼️</div>
+          <div style="font-size:14px;font-weight:800;color:#555;margin-top:8px">Rasm tanlash uchun bosing</div>
+          <div style="font-size:11px;color:#aaa;margin-top:4px">JPG, PNG • Banner kengligi: 390px</div>
+        </div>
+        <input type="file" id="banner-img-input" style="display:none" accept="image/*" onchange="previewBannerImg(this)">
+        <div style="font-size:11px;color:#999;font-weight:600;margin-top:8px;padding:8px;background:#f9f9f9;border-radius:8px;">
+          💡 Yuklangan rasm banner fonida ko'rsatiladi. Gorizontal formatdagi rasm yaxshiroq ko'rinadi.
+        </div>
+        <!-- Save button for image-only mode -->
+        <button class="admin-go green-btn" id="banner-img-save-btn" onclick="saveBanner()" style="margin-top:12px;">💾 Saqlash</button>
+      </div>
+    </div>
+
+    <!-- TEXT EDIT -->
+    <div class="admin-section" id="banner-text-section">
+      <div class="admin-sec-lbl">📝 Banner matni</div>
+      <div class="admin-form">
+        <label style="font-size:11px;font-weight:800;color:#888;display:block;margin-bottom:4px;">Sarlavha (1-qator)</label>
+        <input class="admin-input" id="b-title" value="Imtihon to'lovini" oninput="updateBannerPreview()">
+        <label style="font-size:11px;font-weight:800;color:#888;display:block;margin-bottom:4px;">Sariq matn (2-qator)</label>
+        <input class="admin-input" id="b-span" value="to'liq qoplaymiz!" oninput="updateBannerPreview()">
+        <label style="font-size:11px;font-weight:800;color:#888;display:block;margin-bottom:4px;">Kichik matn</label>
+        <input class="admin-input" id="b-sub" value="Dream YoungHana+ karta egalariga" oninput="updateBannerPreview()">
+        <label style="font-size:11px;font-weight:800;color:#888;display:block;margin-bottom:4px;">Emoji ikonka</label>
+        <input class="admin-input" id="b-ico" value="🏆" oninput="updateBannerPreview()" style="font-size:20px;">
+        <button class="admin-go green-btn" onclick="saveBanner()">💾 Saqlash</button>
+      </div>
+    </div>
+    <div style="height:20px"></div>
+  </div>
+</div>
+
+<!-- ═══ BOT SOZLAMALARI ═══ -->
+<div class="screen" id="sc-settings">
+  <div class="app-header" style="background:#1a1a2e;">
+    <span class="hdr-back" onclick="goScreen('sc-admin')" style="background:rgba(124,131,253,.2)">‹</span>
+    <span class="hdr-title" style="color:#7C83FD;">⚙️ Bot sozlamalari</span>
+  </div>
+  <div class="admin-screen-body">
+
+    <!-- KIRISH SAHIFASI FONИ -->
+    <div class="admin-section">
+      <div class="admin-sec-lbl">🖼️ Kirish sahifasi foni</div>
+      <div style="padding:12px 14px;">
+        <div id="settings-bg-preview" style="display:none;margin-bottom:10px;border-radius:12px;overflow:hidden;position:relative;height:100px;">
+          <img id="settings-bg-thumb" src="" style="width:100%;height:100%;object-fit:cover;">
+          <button onclick="removeAccessBg()" style="position:absolute;top:6px;right:6px;background:rgba(0,0,0,.55);color:#fff;border:none;border-radius:50%;width:26px;height:26px;cursor:pointer;font-size:13px;">✕</button>
+          <div style="position:absolute;bottom:6px;left:10px;font-size:11px;font-weight:700;color:rgba(255,255,255,.8);">Joriy fon rasmi</div>
+        </div>
+        <div class="aq-upload-box" id="settings-bg-box" onclick="document.getElementById('settings-bg-input').click()">
+          <div style="font-size:28px">🖼️</div>
+          <div style="font-size:13px;font-weight:700;color:#666;margin-top:6px">Kirish sahifasi uchun fon rasm</div>
+          <div style="font-size:11px;color:#aaa;margin-top:3px">JPG, PNG • Portret rasm tavsiya etiladi</div>
+        </div>
+        <input type="file" id="settings-bg-input" style="display:none" accept="image/*" onchange="previewAccessBg(this)">
+      </div>
+    </div>
+
+    <!-- NARX -->
+    <div class="admin-section">
+      <div class="admin-sec-lbl">💰 Kirish narxi</div>
+      <div class="admin-form">
+        <label style="font-size:11px;font-weight:800;color:#888;display:block;margin-bottom:4px;">Narx (₩)</label>
+        <input class="admin-input" id="settings-price" type="text" value="29,900 ₩" placeholder="masalan: 29,900 ₩">
+        <label style="font-size:11px;font-weight:800;color:#888;display:block;margin-bottom:4px;">Qo'shimcha matn</label>
+        <input class="admin-input" id="settings-price-sub" type="text" value="Bir martalik to'lov • Cheksiz foydalanish" placeholder="qo'shimcha izoh">
+      </div>
+    </div>
+
+    <!-- TAVSIF -->
+    <div class="admin-section">
+      <div class="admin-sec-lbl">📝 Kirish sahifasi matni</div>
+      <div class="admin-form">
+        <textarea class="aq-textarea" id="settings-desc" placeholder="Kirish sahifasidagi tavsif matni...">Botdan foydalanish uchun
+to'lovni amalga oshiring va
+admin bilan bog'laning.</textarea>
+      </div>
+    </div>
+
+    <!-- ADMIN USERNAME -->
+    <div class="admin-section">
+      <div class="admin-sec-lbl">👤 Admin Telegram username</div>
+      <div class="admin-form">
+        <label style="font-size:11px;font-weight:800;color:#888;display:block;margin-bottom:4px;">@username (@ belgisisiz)</label>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <span style="font-size:18px;font-weight:900;color:#888;">@</span>
+          <input class="admin-input" id="settings-username" type="text" value="your_admin" placeholder="admin_username" style="margin-bottom:0;flex:1;">
+        </div>
+        <div style="font-size:11px;color:#aaa;font-weight:600;margin-top:6px">"Admin bilan bog'lanish" tugmasi shu usernamega yo'naltiradi</div>
+      </div>
+    </div>
+
+    <!-- PIN O'ZGARTIRISH -->
+    <div class="admin-section">
+      <div class="admin-sec-lbl">🔐 Admin PIN o'zgartirish</div>
+      <div class="admin-form">
+        <label style="font-size:11px;font-weight:800;color:#888;display:block;margin-bottom:4px;">Yangi PIN (4 raqam)</label>
+        <input class="admin-input" id="settings-pin" type="password" maxlength="4" placeholder="●●●●" style="font-size:20px;letter-spacing:8px;">
+        <label style="font-size:11px;font-weight:800;color:#888;display:block;margin-bottom:4px;margin-top:4px;">Tasdiqlang</label>
+        <input class="admin-input" id="settings-pin2" type="password" maxlength="4" placeholder="●●●●" style="font-size:20px;letter-spacing:8px;">
+        <button class="admin-go" onclick="changePin()" style="background:#7C83FD;">🔐 PIN yangilash</button>
+      </div>
+    </div>
+
+    <!-- SAVE ALL -->
+    <div style="padding:16px 14px 32px;">
+      <button class="admin-go green-btn" onclick="saveSettings()" style="font-size:16px;padding:16px;">
+        💾 Barcha sozlamalarni saqlash
+      </button>
+    </div>
+  </div>
+</div>
+
+</div><!-- /phone -->
+<script>
+// ─── STATE ───────────────────────────────────
+// ─── SCREENSHOT PROTECTION (real) ────────────
+(function(){
+  // Method 1: black overlay on visibility change (works on mobile)
+  document.addEventListener('visibilitychange', function(){
+    const protect = document.getElementById('ss-protect');
+    if(protect){
+      if(document.visibilityState==='hidden'){
+        protect.style.display='block';
+        document.body.style.filter='brightness(0)';
+      } else {
+        setTimeout(()=>{
+          protect.style.display='none';
+          document.body.style.filter='';
+        }, 400);
+      }
+    }
+  });
+  // Method 2: PrintScreen key intercept
+  document.addEventListener('keydown', function(e){
+    if(e.key==='PrintScreen' || e.keyCode===44){
+      e.preventDefault();
+      const protect = document.getElementById('ss-protect');
+      if(protect){
+        protect.style.display='block';
+        document.body.style.filter='brightness(0)';
+        setTimeout(()=>{ protect.style.display='none'; document.body.style.filter=''; }, 600);
+      }
+    }
+  });
+  // Method 3: context menu block
+  document.addEventListener('contextmenu', e=>e.preventDefault());
+})();
+
+// ─── SWIPE SCREEN ────────────────────────────
+let naCurrentPage = 0; // 0=hero, 1=price
+let naTouchStartY = 0;
+let naTouchStartX = 0;
+let naIsDragging = false;
+
+function naInit(){
+  const page1 = document.getElementById('na-page1');
+  const page2 = document.getElementById('na-page2');
+  const root  = document.getElementById('na-swipe-root');
+  if(!page1||!page2) return;
+
+  // Set initial states
+  setPageState(page1, 'page-visible');
+  setPageState(page2, 'page-hidden-bot');
+
+  // Trigger hero animation after short delay
+  setTimeout(()=>{ page1.classList.add('na-animate'); }, 200);
+
+  // Swipe hint click
+  const hint = document.getElementById('na-swipe-hint');
+  if(hint) hint.addEventListener('click', ()=>swipeTo(1));
+
+  // TOUCH events for swipe
+  root.addEventListener('touchstart', naTouchStart, {passive:true});
+  root.addEventListener('touchmove',  naTouchMove,  {passive:false});
+  root.addEventListener('touchend',   naTouchEnd,   {passive:true});
+
+  // MOUSE events for desktop drag
+  root.addEventListener('mousedown', naMouseDown);
+  root.addEventListener('mousemove', naMouseMove);
+  root.addEventListener('mouseup',   naMouseUp);
+}
+
+function naTouchStart(e){
+  naTouchStartY = e.touches[0].clientY;
+  naTouchStartX = e.touches[0].clientX;
+  naIsDragging = true;
+}
+function naTouchMove(e){
+  if(!naIsDragging) return;
+  const dy = naTouchStartY - e.touches[0].clientY;
+  const dx = Math.abs(naTouchStartX - e.touches[0].clientX);
+  if(Math.abs(dy) > dx) e.preventDefault(); // prevent scroll
+}
+function naTouchEnd(e){
+  if(!naIsDragging) return;
+  naIsDragging = false;
+  const dy = naTouchStartY - e.changedTouches[0].clientY;
+  if(dy > 50 && naCurrentPage === 0) swipeTo(1);
+  else if(dy < -50 && naCurrentPage === 1) swipeTo(0);
+}
+
+let naMouseStartY = 0, naMouseDown2 = false;
+function naMouseDown(e){ naMouseStartY=e.clientY; naMouseDown2=true; }
+function naMouseMove(e){
+  if(!naMouseDown2) return;
+  const dy = naMouseStartY - e.clientY;
+  if(Math.abs(dy) > 8) naIsDragging = true;
+}
+function naMouseUp(e){
+  if(!naMouseDown2) return;
+  naMouseDown2=false;
+  const dy = naMouseStartY - e.clientY;
+  if(dy > 60 && naCurrentPage===0) swipeTo(1);
+  else if(dy < -60 && naCurrentPage===1) swipeTo(0);
+  naIsDragging = false;
+}
+
+function setPageState(el, state){
+  el.classList.remove('page-visible','page-hidden-top','page-hidden-bot');
+  if(state) el.classList.add(state);
+}
+
+function swipeTo(pageNum){
+  const page1 = document.getElementById('na-page1');
+  const page2 = document.getElementById('na-page2');
+  if(!page1||!page2) return;
+  naCurrentPage = pageNum;
+
+  if(pageNum === 1){
+    // Swipe UP — hide page1 top, show page2
+    setPageState(page1, 'page-hidden-top');
+    setPageState(page2, 'page-visible');
+    page2.classList.remove('na-animate2');
+    setTimeout(()=>{ page2.classList.add('na-animate2'); }, 80);
+  } else {
+    // Swipe DOWN — hide page2 bottom, show page1
+    setPageState(page2, 'page-hidden-bot');
+    page2.classList.remove('na-animate2');
+    setPageState(page1, 'page-visible');
+    if(!page1.classList.contains('na-animate')) page1.classList.add('na-animate');
+  }
+}
+
+window.addEventListener('DOMContentLoaded',()=>{
+  goScreen('sc-noaccess');
+  naInit();
+});
+
+// ─── STATE ───────────────────────────────────
+let lang='ko', mode='study', cat='top100', qi=0, answered=false, sel=[], ql=[], audioPlaying=false;
+let logoTapCount=0, logoTapTimer=null;
+let pinValue='';
+let hasAccess=false;
+const ADMIN_PIN='1234';
+
+// Show no-access on load
+// DOMContentLoaded handled inside naInit above
+
+let priceTapCount=0, priceTapTimer=null;
+
+function priceTap(){
+  priceTapCount++;
+  if(priceTapTimer) clearTimeout(priceTapTimer);
+
+  const hint=document.getElementById('price-tap-hint');
+
+  if(priceTapCount>=5){
+    priceTapCount=0;
+    hint.style.display='none';
+    pinValue=''; updatePinDots();
+    document.getElementById('pin-err').textContent='';
+    // PIN muvaffaqiyatli bo'lsa frontga kiradi
+    goScreen('sc-pin-front');
+    return;
+  }
+
+  if(priceTapCount>=2){
+    const left=5-priceTapCount;
+    hint.style.display='block';
+    hint.textContent=`${priceTapCount}/5`;
+    // Flash effect
+    const card=document.getElementById('noaccess-card-price');
+    card.style.borderColor='#aaa';
+    setTimeout(()=>card.style.borderColor='var(--yellow)',200);
+  }
+
+  priceTapTimer=setTimeout(()=>{
+    priceTapCount=0;
+    hint.style.display='none';
+    document.getElementById('noaccess-card-price').style.borderColor='var(--yellow)';
+  },2000);
+}
+
+function demoAccess(){ hasAccess=true; goScreen('sc-home'); }
+
+// ─── LOGO TAP → PIN (5x) ─────────────────────
+function logoTap(){
+  logoTapCount++;
+  if(logoTapTimer) clearTimeout(logoTapTimer);
+  if(logoTapCount>=5){
+    logoTapCount=0; pinValue=''; updatePinDots();
+    document.getElementById('pin-err').textContent='';
+    goScreen('sc-pin'); return;
+  }
+  if(logoTapCount>=3){
+    const logo=document.getElementById('home-logo');
+    logo.style.opacity='0.5'; setTimeout(()=>logo.style.opacity='1',120);
+  }
+  logoTapTimer=setTimeout(()=>{ logoTapCount=0; },2000);
+}
+
+// ─── FRONT PIN (foydalanuvchi) ────────────────
+let frontPinValue='';
+const FRONT_PIN='1234';
+
+function pinFrontKey(n){
+  if(frontPinValue.length>=4) return;
+  frontPinValue+=n; updateFrontDots();
+  if(frontPinValue.length===4) setTimeout(checkFrontPin,200);
+}
+function pinFrontDel(){
+  if(frontPinValue.length>0){ frontPinValue=frontPinValue.slice(0,-1); updateFrontDots(); document.getElementById('pin-front-err').textContent=''; }
+}
+function updateFrontDots(){
+  for(let i=0;i<4;i++){
+    const d=document.getElementById('pf'+i); if(!d) return;
+    d.classList.toggle('filled',i<frontPinValue.length); d.classList.remove('error');
+  }
+}
+function checkFrontPin(){
+  const correct=window._FRONT_PIN||FRONT_PIN;
+  if(frontPinValue===correct){
+    hasAccess=true; frontPinValue=''; updateFrontDots(); goScreen('sc-home');
+  } else {
+    for(let i=0;i<4;i++){ const d=document.getElementById('pf'+i); if(d) d.classList.add('error'); }
+    const dotsEl=document.getElementById('pin-dots-front');
+    if(dotsEl){ dotsEl.classList.add('shake'); setTimeout(()=>dotsEl.classList.remove('shake'),500); }
+    document.getElementById('pin-front-err').textContent='❌ Noto\'g\'ri kod.';
+    setTimeout(()=>{ frontPinValue=''; updateFrontDots(); },500);
+  }
+}
+
+// ─── ADMIN PIN ────────────────────────────────
+function pinKey(n){
+  if(pinValue.length>=4) return;
+  pinValue+=n; updatePinDots();
+  if(pinValue.length===4) setTimeout(checkPin,200);
+}
+function pinDel(){
+  if(pinValue.length>0){ pinValue=pinValue.slice(0,-1); updatePinDots(); document.getElementById('pin-err').textContent=''; }
+}
+function updatePinDots(){
+  for(let i=0;i<4;i++){
+    const d=document.getElementById('pd'+i); if(!d) return;
+    d.classList.toggle('filled',i<pinValue.length); d.classList.remove('error');
+  }
+}
+function checkPin(){
+  const correctPin = window._ADMIN_PIN || adminPin || ADMIN_PIN;
+  if(pinValue===correctPin){ goScreen('sc-admin'); pinValue=''; updatePinDots(); }
+  else {
+    for(let i=0;i<4;i++) document.getElementById('pd'+i).classList.add('error');
+    document.getElementById('pin-dots').classList.add('shake');
+    document.getElementById('pin-err').textContent='❌ Noto\'g\'ri PIN. Qayta urinib ko\'ring.';
+    setTimeout(()=>{ pinValue=''; updatePinDots(); document.getElementById('pin-dots').classList.remove('shake'); },500);
+  }
+}
+
+// ─── SETTINGS ────────────────────────────────
+let adminUsername = 'your_admin';
+let adminPin = '1234';
+
+function previewAccessBg(input){
+  if(!input.files[0]) return;
+  const url = URL.createObjectURL(input.files[0]);
+  document.getElementById('settings-bg-thumb').src = url;
+  document.getElementById('settings-bg-preview').style.display = 'block';
+  document.getElementById('settings-bg-box').style.display = 'none';
+  // Apply to no-access screen
+  const bg = document.getElementById('noaccess-bg');
+  bg.style.backgroundImage = `url(${url})`;
+  bg.style.display = 'block';
+}
+function removeAccessBg(){
+  document.getElementById('settings-bg-thumb').src='';
+  document.getElementById('settings-bg-preview').style.display='none';
+  document.getElementById('settings-bg-box').style.display='flex';
+  document.getElementById('settings-bg-input').value='';
+  document.getElementById('noaccess-bg').style.display='none';
+}
+
+function changePin(){
+  const p1=document.getElementById('settings-pin').value;
+  const p2=document.getElementById('settings-pin2').value;
+  if(p1.length!==4||!/^\d{4}$/.test(p1)){ alert('PIN 4 ta raqamdan iborat bo\'lishi kerak!'); return; }
+  if(p1!==p2){ alert('PIN larni mos kelmadi!'); return; }
+  adminPin=p1;
+  // Update runtime ADMIN_PIN — use a workaround via closure
+  window._ADMIN_PIN=p1;
+  document.getElementById('settings-pin').value='';
+  document.getElementById('settings-pin2').value='';
+  const btn=event.target;
+  btn.textContent='✅ PIN yangilandi!'; btn.style.background='#1b5e20';
+  setTimeout(()=>{ btn.textContent='🔐 PIN yangilash'; btn.style.background='#7C83FD'; },2000);
+}
+
+function saveSettings(){
+  // Username
+  const uname=document.getElementById('settings-username').value.trim().replace('@','');
+  if(uname) adminUsername=uname;
+  // Price
+  const price=document.getElementById('settings-price').value;
+  const priceSub=document.getElementById('settings-price-sub').value;
+  if(price) document.getElementById('noaccess-price-display').textContent=price;
+  if(priceSub) document.getElementById('noaccess-price-sub').textContent=priceSub;
+  // Desc
+  const desc=document.getElementById('settings-desc').value;
+  if(desc) document.getElementById('noaccess-desc').innerHTML=desc.replace(/\n/g,'<br>');
+
+  const btn=document.querySelector('#sc-settings .green-btn');
+  btn.textContent='✅ Saqlandi!'; btn.style.background='#1b5e20';
+  setTimeout(()=>{ btn.textContent='💾 Barcha sozlamalarni saqlash'; btn.style.background=''; goScreen('sc-admin'); },1500);
+}
+
+// ─── ADMIN ACTIONS ───────────────────────────
+function contactAdmin(){
+  const url=`https://t.me/${adminUsername}`;
+  // Real Telegram Mini App:
+  // window.Telegram?.WebApp?.openTelegramLink(url);
+  alert(`Admin bilan bog'lanish:\nt.me/${adminUsername}\n\n(Real botda Telegram chat ochiladi)`);
+}
+function activateUser(){
+  const val=document.getElementById('act-input').value.trim();
+  if(!val){ alert('Iltimos Telegram ID kiriting!'); return; }
+  const ulist=document.getElementById('ulist').parentElement;
+  const row=document.createElement('div');
+  row.className='admin-item'; row.style.animation='popIn .4s ease';
+  row.innerHTML=`<div class="admin-ico" style="background:var(--green-l);color:var(--green);font-weight:900">${val.slice(-1).toUpperCase()}</div><div class="admin-item-info"><div class="admin-item-title">Yangi foydalanuvchi</div><div class="admin-item-sub">ID: ${val} · ✅ Aktiv</div></div>`;
+  ulist.insertBefore(row,document.getElementById('ulist'));
+  document.getElementById('act-input').value='';
+  const btns=document.querySelectorAll('.admin-go.green-btn');
+  btns.forEach(btn=>{ const o=btn.textContent; btn.textContent='✅ Aktivlashtirildi!'; btn.style.background='#1b5e20'; setTimeout(()=>{ btn.textContent=o; btn.style.background=''; },2000); });
+}
+
+// ─── DATA ────────────────────────────────────
+const QS=[
+  { cat:'s1',type:'Sentence',meta:'(4지 1답)',score:'2점',ico:'☑️',multi:false, hasAudio:true,
+    ko:"모바일 운전면허증 발급 신청 절차로 옳은 것은?",
+    en:"Which of the following procedures is correct when applying for a mobile driver's license?",
+    uz:"Mobil haydovchilik guvohnomasi uchun ariza topshirishda qaysi tartib to'g'ri?",
+    situation:null,hasImg:false,hasVid:false,
+    answers:[
+      {ko:"어떤 앱으로도 신청할 수 있다.",en:"Applications can be made using any app.",uz:"Ilovadan foydalanib ariza topshirish mumkin."},
+      {ko:"신청자 명의의 스마트폰으로 본인인증을 통해 신청해야 한다.",en:"Applications must be made using a smartphone under the applicant's name with identity verification.",uz:"Ariza shaxsiy telefon raqami tekshiruvi bilan shaxs nomidan smartfon orqali topshirilishi shart.",c:true},
+      {ko:"경찰서 교통민원실에서만 신청할 수 있다.",en:"Applications can only be made at the traffic civil service office of a police station.",uz:"Ariza faqat politsiya bo'limida topshirilishi mumkin."},
+      {ko:"운전면허시험장에서는 모바일 운전면허증 발급이 안 된다.",en:"A mobile driver's license cannot be issued at a driver's license test center.",uz:"Mobil guvohnoma haydovchilik markazida berilmaydi."},
+    ]
+  },
+  { cat:'s1',type:'Sentence',meta:'(4지 1답)',score:'2점',ico:'☑️',multi:false, hasAudio:false,
+    ko:"도로교통법에 따라 운전면허증 발급에 관한 설명으로 틀린 것은?",
+    en:"According to the Road Traffic Act, which of the following is NOT true about driver's license issuance?",
+    uz:"Yo'l harakati qonuniga ko'ra, haydovchilik guvohnomasini berish haqida qaysi fikr noto'g'ri?",
+    situation:null,hasImg:false,hasVid:false,
+    answers:[
+      {ko:"운전면허시험 합격일로부터 30일 이내에 발급해야 한다.",en:"A driver's license must be issued within 30 days of passing the driver's license test.",uz:"Imtihon topshirilgandan so'ng 30 kun ichida guvohnoma berilishi shart."},
+      {ko:"운전면허증은 영어로 발급할 수 없다.",en:"A driver's license cannot be issued in English.",uz:"Haydovchilik guvohnomasi ingliz tilida berilishi mumkin emas.",c:true},
+      {ko:"모바일 운전면허증을 발급받을 수 있다.",en:"A mobile driver's license can be issued.",uz:"Mobil haydovchilik guvohnomasi berilishi mumkin."},
+      {ko:"분실한 운전면허증을 재발급받을 수 있다.",en:"A lost driver's license can be reissued.",uz:"Yo'qolgan haydovchilik guvohnomasi qayta berilishi mumkin."},
+    ]
+  },
+  { cat:'ss1',type:'Safety Sign',meta:'(4지 1답)',score:'2점',ico:'🚦',multi:false, hasAudio:true,
+    ko:"이 안전 표지판은 무엇을 의미합니까?",
+    en:"What does this safety sign signify?",
+    uz:"Bu xavfsizlik belgisi nimani anglatadi?",
+    situation:null,hasImg:true,imgIco:'🚦',hasVid:false,
+    answers:[
+      {ko:"어린이 보호구역에서는 보호자가 동행해야 한다.",en:"Children must be accompanied by a guardian in a school zone.",uz:"Maktab zonasida bolalar bilan qo'riqchi bo'lishi shart."},
+      {ko:"보행자는 횡단보도를 이용해야 한다.",en:"Pedestrians must use a crosswalk to cross the road.",uz:"Piyodalar yo'lni kesib o'tish uchun piyodalar yo'lagidan foydalanishi shart."},
+      {ko:"앞에 보행자 전용 도로가 있다.",en:"There is an exclusive road for pedestrians ahead.",uz:"Oldinda faqat piyodalar uchun yo'l mavjud.",c:true},
+      {ko:"노인 보호구역에서 노인을 보호해야 한다.",en:"Elderly persons must be protected in a silver zone.",uz:"Keksalar zonasida keksalarni himoya qilish kerak."},
+    ]
+  },
+  { cat:'pic',type:'Picture',meta:'(5지 2답)',score:'3점',ico:'🖼️',multi:true, hasAudio:true,
+    ko:"주어진 상황에서 잘못된 운전 방법 2가지는? (2개 선택)",
+    en:"Which of the following are incorrect ways to drive in the given situation? (Select TWO)",
+    uz:"Berilgan vaziyatda haydashning qaysi ikki usuli noto'g'ri? (IKKITASINI tanlang)",
+    situation:["Bir yo'nalishda ikki qatorli yo'l","Qizil svetofor","Himoyasiz chap burilish belgisi","Chorrahaga yaqinlashmoqda"],
+    hasImg:true,imgIco:'📷',hasVid:false,
+    answers:[
+      {ko:"직진할 때는 녹색 신호에 진행한다.",en:"When intending to go straight, proceed at the green traffic light.",uz:"To'g'ri borishda yashil svetoforda davom eting."},
+      {ko:"좌회전할 때는 녹색 신호에 대향차를 주의하며 진행한다.",en:"When intending to turn left, proceed at the green traffic light while paying attention to oncoming traffic.",uz:"Chap burilishda qarshi transportga e'tibor bering."},
+      {ko:"좌회전할 때는 좌회전 녹색 화살표 신호에 진행한다.",en:"When intending to turn left, proceed at the green left-turn arrow.",uz:"Chap burilishda yashil chap strelkada davom eting."},
+      {ko:"1차로에서 우회전할 때는 정지선 앞에 임시 정지 후 서행한다.",en:"When intending to turn right from the first lane, stop temporarily before the stop line, then proceed slowly.",uz:"Birinchi qatordan o'ng burilishda to'xtash chizig'i oldida to'xtab, keyin asta davom eting.",c:true},
+      {ko:"우회전할 때는 미리 도로 우측 가장자리를 따라 서행한다.",en:"When intending to turn right, proceed slowly along the far-right lane before making the turn.",uz:"O'ng burilishda yo'lning eng o'ng qatorida asta davom eting.",c:true},
+    ]
+  },
+  { cat:'vid',type:'Video',meta:'(4지 1답)',score:'5점',ico:'▶️',multi:false, hasAudio:false,
+    ko:"영상에 나타난 운전자의 도로교통법 위반 사항으로 맞는 것은? (웹사이트 참조)",
+    en:"Which correctly matches the Road Traffic Act violations shown in the video? (Refer to website)",
+    uz:"Videoda ko'rsatilgan haydovchi qilgan Yo'l harakati qonunini buzish holatlariga mos javob qaysi?",
+    situation:null,hasImg:false,hasVid:true,vidSpeed:"00 km/h",
+    answers:[
+      {ko:"보행자보호의무, 신호, 지정차로, 주정차금지 위반",en:"Violations of the pedestrian protection duty, signal, designated lane, and no parking and stopping area.",uz:"Piyodalarni himoya qilish burchagi, signal, belgilangan qator va to'xtash taqiqlangan joy buzilishi."},
+      {ko:"보행자보호의무, 신호 위반, 차로지정 위반, 불법 합류",en:"Violation of the duty to protect pedestrians, signal violation, lane designation violation, illegal merging.",uz:"Piyodalarni himoya burchagi, signal, qator belgilash buzilishi va noqonuniy qo'shilish."},
+      {ko:"차로변경금지구역, 부적절한 추월, 보행자보호의무, 신호 위반",en:"Violations of the no-lane changing zone, improper overtaking, pedestrian protection duty, and signal.",uz:"Qator o'zgartirish taqiqlangan zona, noto'g'ri quvib o'tish, piyodalarni himoya burchagi va signal buzilishi."},
+      {ko:"차로변경금지구역, 주정차금지, 보행자보호의무, 신호 위반",en:"Violations of the no-lane changing zone, no parking and stopping area, pedestrian protection duty, and signal.",uz:"Qator o'zgartirish taqiqlangan zona, to'xtash taqiqlangan joy, piyodalarni himoya burchagi va signal buzilishi.",c:true},
+    ]
+  },
+];
+
+const CMAP={ top100:QS, s1:QS.filter(q=>q.cat==='s1'), s2:[], pic:QS.filter(q=>q.cat==='pic'), ill:[], ss1:QS.filter(q=>q.cat==='ss1'), vid:QS.filter(q=>q.cat==='vid') };
+
+// ─── NAV ─────────────────────────────────────
+function goScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  // Statusbar color
+  const sb=document.getElementById('main-statusbar');
+  if(sb){
+    const dark=['sc-noaccess','sc-pin-front','sc-pin','sc-admin','sc-add-q','sc-banner-edit','sc-settings','sc-result'];
+    if(dark.includes(id)){
+      sb.style.background='#0d0d0d'; sb.style.color='#fff';
+      sb.querySelector('span:last-child').style.filter='';
+    } else {
+      sb.style.background='var(--yellow)'; sb.style.color='#000';
+      sb.querySelector('span:last-child').style.filter='';
+    }
+  }
+}
+function setCatMode(m){ mode=m; refreshModes(); }
+const catNames = {
+  top100: { ko:'즐겨찾기 TOP100', en:'Favourites TOP100', uz:'Top 100 savollar' },
+  s1:     { ko:'Sentence (4지 1답)', en:'Sentence (4 options, 1 answer)', uz:'Matn (4 variant, 1 javob)' },
+  s2:     { ko:'Sentence (4지 2답)', en:'Sentence (4 options, 2 answers)', uz:'Matn (4 variant, 2 javob)' },
+  pic:    { ko:'Picture (5지 2답)', en:'Picture (5 options, 2 answers)', uz:'Rasm (5 variant, 2 javob)' },
+  ill:    { ko:'Illustration (5지 2답)', en:'Illustration (5 options, 2 answers)', uz:'Chizma (5 variant, 2 javob)' },
+  ss1:    { ko:'Safety Sign (4지 1답)', en:'Safety Sign (4 options, 1 answer)', uz:'Xavfsizlik belgisi (4 variant, 1 javob)' },
+  vid:    { ko:'Video (4지 1답)', en:'Video (4 options, 1 answer)', uz:'Video (4 variant, 1 javob)' },
+};
+function updateCatNames(){
+  document.querySelectorAll('.cat-item[onclick]').forEach(item=>{
+    const m = item.getAttribute('onclick').match(/openCat\('(\w+)'\)/);
+    if(!m) return;
+    const key = m[1];
+    if(!catNames[key]) return;
+    const nameEl = item.querySelector('.cat-name');
+    if(nameEl) nameEl.textContent = catNames[key][lang] || catNames[key].ko;
+  });
+  const catTitleEl = document.getElementById('cat-title');
+  if(catTitleEl) catTitleEl.textContent = lang==='uz' ? "Bo'limlar bo'yicha o'rganish" : lang==='en' ? "Study by Category" : "유형별 학습하기";
+}
+function selLang(l,el){ lang=l; document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('sel')); el.classList.add('sel'); updateCatNames(); }
+
+// ─── CATEGORY ────────────────────────────────
+function switchMode(m){ mode=m; refreshModes(); }
+function qMode(m){ mode=m; refreshModes(); answered=false; sel=[]; renderQ(); }
+function refreshModes(){
+  ['mb-study','mb-memo','qmb-study','qmb-memo'].forEach(id=>{
+    const el=document.getElementById(id); if(!el)return;
+    const isSt=id.includes('study');
+    el.className='mode-btn '+((mode==='study')===isSt?'on':'off');
+  });
+}
+
+// ─── QUESTION ────────────────────────────────
+function txt(q){ return lang==='ko'?q.ko:(lang==='en'?q.en:q.uz); }
+
+function tr(q){ return (lang==='ko'||lang==='en')?q.uz:''; }
+function atxt(a){ return lang==='ko'?a.ko:(lang==='en'?a.en:a.uz); }
+function atr(a){ return (lang==='ko'||lang==='en')?a.uz:''; }
+
+function renderQ(){
+  const q=ql[qi]; if(!q)return;
+  const tot=ql.length, num=qi+1;
+  document.getElementById('t-ico').textContent=q.ico;
+  document.getElementById('t-name').textContent=q.type;
+  document.getElementById('t-meta').textContent=' '+q.meta;
+  document.getElementById('t-score').textContent=q.score;
+  document.getElementById('q-num').innerHTML=`<strong>${num}</strong> <span style="color:#bbb">/ ${tot}</span>`;
+  document.getElementById('q-main').textContent=txt(q);
+  const t=tr(q), tel=document.getElementById('q-trans');
+  tel.textContent=t; tel.style.display=t?'block':'none';
+
+  // Audio — faqat o'rganish rejimida ko'rsatiladi
+  const ab=document.getElementById('audio-btn');
+  if(q.hasAudio && mode==='memo'){ ab.style.display='flex'; ab.classList.remove('playing'); audioPlaying=false; document.getElementById('audio-ico').textContent='🔊'; }
+  else { ab.style.display='none'; }
+
+  // Image
+  const ib=document.getElementById('q-img');
+  if(q.hasImg){ ib.style.display='block'; document.getElementById('q-img-ico').textContent=q.imgIco||'🖼️'; }
+  else ib.style.display='none';
+
+  // Video
+  const vb=document.getElementById('q-vid');
+  if(q.hasVid){ vb.style.display='flex'; document.getElementById('vid-spd').textContent=q.vidSpeed||'00 km/h'; }
+  else vb.style.display='none';
+
+  // Road
+  const rb=document.getElementById('q-road');
+  if(q.situation&&q.situation.length){ rb.style.display='block'; document.getElementById('road-items').innerHTML=q.situation.map(s=>`<div class="road-item">${s}</div>`).join(''); }
+  else rb.style.display='none';
+
+  renderAns(q);
+  document.getElementById('qnav-n').innerHTML=`${num} <span class="qnav-t">/ ${tot}</span>`;
+  // Update nav
+  const nxBtn = document.getElementById('qnav-nx');
+  if(mode==='study' && num===tot){
+    nxBtn.textContent = 'Natija 🏁';
+    nxBtn.style.color = '#FFD600';
+    nxBtn.className = 'qnav-s r';
+  } else {
+    nxBtn.textContent = 'Keyingi ›';
+    nxBtn.style.color = '';
+    nxBtn.className = 'qnav-s r' + (num===tot?' dim':'');
+  }
+  document.getElementById('q-scroll').scrollTop=0;
+}
+
+function renderAns(q){
+  const isMemo=mode==='memo', wrap=document.getElementById('ans-wrap');
+  let html='';
+  q.answers.forEach((a,i)=>{
+    const n=String(i+1).padStart(2,'0'), isC=!!a.c, isSel=sel.includes(i);
+    let cls='ans-item', badge='';
+
+    if(isMemo){
+      // O'rganish: to'g'ri javob doim ko'rsatiladi
+      if(isC){ cls+=' study-ok no-click'; badge='<div class="jdp">정답</div>'; }
+      else cls+=' no-click';
+    } else if(answered){
+      // Test: javob topshirildi
+      if(isC){ cls+=' correct no-click'; badge='<div class="jdp">정답</div>'; }
+      else if(isSel){ cls+=' wrong no-click'; }
+      else cls+=' no-click';
+    } else if(isSel && q.multi){
+      // Multi: tanlangan lekin hali topshirilmagan — sariq belgilash
+      cls+=' selected-partial';
+    }
+    const tr2=atr(a);
+    html+=`<div class="${cls}" onclick="pickAns(${i})">${badge}<div class="ans-num">${n}</div><div class="ans-texts"><div class="ans-main">${atxt(a)}</div>${tr2?`<div class="ans-tr">${tr2}</div>`:''}</div></div>`;
+  });
+  wrap.innerHTML=html;
+}
+
+
+
+function qPrev(){ if(qi>0){qi--;answered=false;sel=[];audioPlaying=false;renderQ();} }
+function qNext(){
+  if(qi<ql.length-1){
+    qi++;answered=false;sel=[];audioPlaying=false;renderQ();
+  } else if(mode==='study'){
+    // Last question in test mode → show result
+    showResult();
+  }
+}
+
+// ─── TEST TRACKING ────────────────────────────
+let testAnswers = []; // {qi, correct, userSel, q}
+
+function pickAns(i){
+  if(mode==='memo'||answered) return;
+  const q=ql[qi];
+  if(!q.multi){
+    sel=[i]; answered=true;
+  } else {
+    if(sel.includes(i)) sel=sel.filter(x=>x!==i);
+    else if(sel.length<2) sel.push(i);
+    if(sel.length>=2) answered=true;
+  }
+  renderAns(q);
+  if(answered && mode==='study'){
+    // Record answer
+    const correctIndices = q.answers.map((a,idx)=>a.c?idx:-1).filter(x=>x>=0);
+    const isCorrect = correctIndices.every(ci=>sel.includes(ci)) && sel.every(si=>correctIndices.includes(si));
+    testAnswers[qi]={ isCorrect, sel:[...sel], q, qi };
+    // Auto-advance if last question handled by nav
+  }
+}
+
+function openCat(c){
+  cat=c; qi=0; answered=false; sel=[];
+  testAnswers=[];
+  ql=(CMAP[c]&&CMAP[c].length)?CMAP[c]:QS;
+  document.getElementById('q-hdr').textContent=c==='top100'?'즐겨찾기 Top100':'유형별 학습하기';
+  refreshModes(); renderQ(); goScreen('sc-q');
+}
+
+function retryTest(){
+  qi=0; answered=false; sel=[]; testAnswers=[];
+  renderQ(); goScreen('sc-q');
+}
+function backFromResult(){ goScreen('sc-cat'); }
+
+// ─── RESULT SCREEN ───────────────────────────
+function showResult(){
+  const total = ql.length;
+  let correct = 0, wrong = 0;
+  const wrongQs = [];
+
+  for(let i=0;i<total;i++){
+    const rec = testAnswers[i];
+    if(rec && rec.isCorrect){ correct++; }
+    else {
+      wrong++;
+      wrongQs.push({ qi:i, q:ql[i], rec });
+    }
+  }
+
+  const pct = Math.round((correct/total)*100);
+  const isPerfect = pct===100;
+
+  // Score card
+  let cardBg, emoji, msg;
+  if(isPerfect){ cardBg='linear-gradient(135deg,#1b5e20,#2e7d32)'; emoji='🏆'; msg='Mukammal natija! Barcha savollar to\'g\'ri!'; }
+  else if(pct>=80){ cardBg='linear-gradient(135deg,#e65100,#f57c00)'; emoji='👍'; msg='Yaxshi! Biroz mashq qiling.'; }
+  else if(pct>=60){ cardBg='linear-gradient(135deg,#1565c0,#1976d2)'; emoji='📚'; msg='O\'rganishni davom ettiring!'; }
+  else { cardBg='linear-gradient(135deg,#b71c1c,#c62828)'; emoji='💪'; msg='Ko\'proq takrorlash kerak!'; }
+
+  document.getElementById('result-score-card').innerHTML=`
+    <div style="background:${cardBg};padding:28px 20px;text-align:center;">
+      <div style="font-size:48px;margin-bottom:8px;">${emoji}</div>
+      <div style="font-size:48px;font-weight:900;color:#fff;line-height:1;font-family:'Nunito',sans-serif;">${pct}%</div>
+      <div style="font-size:13px;color:rgba(255,255,255,0.8);margin-top:6px;font-weight:700;">${msg}</div>
+      <div style="font-size:12px;color:rgba(255,255,255,0.55);margin-top:4px;">${correct} / ${total} savol</div>
+    </div>`;
+
+  document.getElementById('res-correct').textContent = correct;
+  document.getElementById('res-wrong').textContent = wrong;
+
+  // Wrong questions list
+  const ws = document.getElementById('wrong-section');
+  if(wrongQs.length===0){
+    ws.innerHTML='';
+  } else {
+    let html=`<div style="font-size:13px;font-weight:800;color:#555;margin-bottom:10px;display:flex;align-items:center;gap:6px;">
+      ❌ Xato qilgan savollar
+      <span style="background:#c62828;color:#fff;font-size:11px;font-weight:900;padding:2px 8px;border-radius:20px;">${wrongQs.length}</span>
+    </div>`;
+    wrongQs.forEach(({qi:qIdx, q, rec})=>{
+      const mainTxt = lang==='ko'?q.ko:(lang==='en'?q.en:q.uz);
+      const correctAns = q.answers.filter(a=>a.c).map(a=>lang==='ko'?a.ko:(lang==='en'?a.en:a.uz)).join(' / ');
+      const userAns = rec && rec.sel.length>0
+        ? rec.sel.map(si=>{ const a=q.answers[si]; return lang==='ko'?a.ko:(lang==='en'?a.en:a.uz); }).join(' / ')
+        : 'Javob berilmadi';
+
+      html+=`<div style="background:#fff;border:1px solid var(--bdr);border-radius:14px;padding:14px;margin-bottom:10px;">
+        <div style="font-size:11px;font-weight:800;color:#aaa;margin-bottom:6px;">SAVOL ${qIdx+1} — ${q.type}</div>
+        <div style="font-size:13px;font-weight:800;color:#111;line-height:1.5;margin-bottom:10px;">${mainTxt}</div>
+        <div style="background:#ffebee;border-radius:8px;padding:8px 10px;margin-bottom:6px;">
+          <div style="font-size:10px;font-weight:800;color:#c62828;text-transform:uppercase;margin-bottom:3px;">❌ Sizning javobingiz</div>
+          <div style="font-size:12px;font-weight:600;color:#333;">${userAns}</div>
+        </div>
+        <div style="background:#e8f5e9;border-radius:8px;padding:8px 10px;">
+          <div style="font-size:10px;font-weight:800;color:#2e7d32;text-transform:uppercase;margin-bottom:3px;">✅ To'g'ri javob</div>
+          <div style="font-size:12px;font-weight:700;color:#1b5e20;">${correctAns}</div>
+        </div>
+      </div>`;
+    });
+    ws.innerHTML = html;
+  }
+
+  goScreen('sc-result');
+
+  // Confetti if perfect
+  if(isPerfect) setTimeout(startConfetti, 300);
+}
+
+// ─── CONFETTI ────────────────────────────────
+function startConfetti(){
+  const canvas = document.getElementById('confetti-canvas');
+  if(!canvas) return;
+  canvas.style.display='block';
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  const ctx = canvas.getContext('2d');
+  const pieces = [];
+  const colors=['#FFD600','#FF5252','#69F0AE','#40C4FF','#EA80FC','#FFAB40','#fff'];
+
+  for(let i=0;i<120;i++){
+    pieces.push({
+      x: Math.random()*canvas.width,
+      y: Math.random()*canvas.height - canvas.height,
+      w: Math.random()*10+5,
+      h: Math.random()*6+4,
+      color: colors[Math.floor(Math.random()*colors.length)],
+      rot: Math.random()*360,
+      vx: (Math.random()-0.5)*3,
+      vy: Math.random()*4+2,
+      vr: (Math.random()-0.5)*6,
+      opacity: 1
+    });
+  }
+
+  let frame=0;
+  function draw(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    pieces.forEach(p=>{
+      ctx.save();
+      ctx.globalAlpha = p.opacity;
+      ctx.translate(p.x,p.y);
+      ctx.rotate(p.rot*Math.PI/180);
+      ctx.fillStyle = p.color;
+      ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);
+      ctx.restore();
+      p.x+=p.vx; p.y+=p.vy; p.rot+=p.vr;
+      if(frame>120) p.opacity-=0.01;
+    });
+    frame++;
+    if(frame<200) requestAnimationFrame(draw);
+    else { canvas.style.display='none'; ctx.clearRect(0,0,canvas.width,canvas.height); }
+  }
+  draw();
+}
+
+// ─── AUDIO ───────────────────────────────────
+function toggleAudio(){
+  audioPlaying=!audioPlaying;
+  const btn=document.getElementById('audio-btn');
+  const ico=document.getElementById('audio-ico');
+  if(audioPlaying){
+    btn.classList.add('playing');
+    ico.textContent='⏸';
+    document.getElementById('audio-sub').textContent='Ijro etilmoqda...';
+    // Auto stop after 3s demo
+    setTimeout(()=>{ audioPlaying=false; btn.classList.remove('playing'); ico.textContent='🔊'; document.getElementById('audio-sub').textContent='Admin tomonidan yuklangan audio'; },3000);
+  } else {
+    btn.classList.remove('playing');
+    ico.textContent='🔊';
+    document.getElementById('audio-sub').textContent='Admin tomonidan yuklangan audio';
+  }
+}
+
+// ─── ADD QUESTION FORM ───────────────────────
+let selCat='top100', mediaType='none', hasIzoh=false, hasAudio=false;
+let ansLang='ko', qLang='ko';
+let answerCount=0;
+
+function selectCat(el, cat){
+  selCat=cat;
+  document.querySelectorAll('.aq-cat-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  // Show road situation for pic/ill/vid
+  const showRoad=['pic','ill','vid'].includes(cat);
+  document.getElementById('road-section').style.display=showRoad?'block':'none';
+}
+
+function switchQLang(el, lang){
+  qLang=lang;
+  document.querySelectorAll('.aq-lang-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  ['ko','en','uz'].forEach(l=>{
+    document.getElementById('q-text-'+l).style.display=l===lang?'block':'none';
+  });
+}
+
+function switchAnsLang(el, lang){
+  ansLang=lang;
+  document.querySelectorAll('#answers-list').forEach(()=>{});
+  const tabs=el.parentElement.querySelectorAll('.aq-lang-tab');
+  tabs.forEach(t=>t.classList.remove('active')); el.classList.add('active');
+  document.querySelectorAll('.ans-form-input').forEach(inp=>{
+    const num=inp.dataset.num, curLang=inp.dataset.lang;
+    inp.style.display=curLang===lang?'block':'none';
+  });
+}
+
+function selectMedia(type){
+  mediaType=type;
+  ['none','img','vid'].forEach(t=>{
+    document.getElementById('media-'+t).classList.toggle('active',t===type);
+  });
+  const area=document.getElementById('media-upload-area');
+  if(type==='none'){ area.style.display='none'; return; }
+  area.style.display='block';
+  document.getElementById('upload-ico').textContent=type==='img'?'🖼️':'🎬';
+  document.getElementById('upload-lbl').textContent=type==='img'?'Rasm yuklash uchun bosing':'Video yuklash uchun bosing';
+  document.getElementById('aq-file-input').accept=type==='img'?'image/*':'video/*';
+}
+
+function previewMedia(input){
+  if(!input.files[0]) return;
+  const file=input.files[0];
+  const preview=document.getElementById('media-preview');
+  preview.style.display='block';
+  if(file.type.startsWith('image/')){
+    const img=document.createElement('img');
+    img.style.cssText='width:100%;border-radius:10px;display:block;';
+    img.src=URL.createObjectURL(file);
+    preview.innerHTML=''; preview.appendChild(img);
+  } else {
+    const vid=document.createElement('video');
+    vid.style.cssText='width:100%;border-radius:10px;display:block;';
+    vid.controls=true; vid.src=URL.createObjectURL(file);
+    preview.innerHTML=''; preview.appendChild(vid);
+  }
+  document.getElementById('upload-lbl').textContent=file.name;
+}
+
+function toggleIzoh(show){
+  hasIzoh=show;
+  document.getElementById('izoh-no').classList.toggle('active',!show);
+  document.getElementById('izoh-yes').classList.toggle('active',show);
+  document.getElementById('izoh-area').style.display=show?'block':'none';
+}
+
+function toggleAudioUpload(show){
+  hasAudio=show;
+  document.getElementById('audio-no').classList.toggle('active',!show);
+  document.getElementById('audio-yes').classList.toggle('active',show);
+  document.getElementById('audio-upload-area').style.display=show?'block':'none';
+}
+
+function previewAudio(input){
+  if(!input.files[0]) return;
+  const file=input.files[0];
+  document.getElementById('audio-fname').textContent=file.name;
+  document.getElementById('audio-player').src=URL.createObjectURL(file);
+  document.getElementById('audio-preview').style.display='block';
+  document.getElementById('audio-upload-lbl').textContent=file.name;
+}
+
+function addAnswer(){
+  const list=document.getElementById('answers-list');
+  const n=++answerCount;
+  const labels=['ko','en','uz'];
+  const div=document.createElement('div');
+  div.className='ans-form-item';
+  div.id='ans-item-'+n;
+  div.innerHTML=`
+    <div class="ans-correct-btn" onclick="toggleCorrect(${n})" title="To'g'ri javob">${String(n).padStart(2,'0')}</div>
+    <div style="flex:1;display:flex;flex-direction:column;gap:4px;">
+      ${labels.map(l=>`<input class="ans-form-input" data-num="${n}" data-lang="${l}" placeholder="${l==='ko'?'Koreyscha...':l==='en'?'English...':'O\'zbekcha...'}" style="display:${l===ansLang?'block':'none'}">`).join('')}
+    </div>
+    <div class="ans-del-btn" onclick="delAnswer(${n})">✕</div>
+  `;
+  list.appendChild(div);
+  if(answerCount>=5) document.getElementById('add-ans-btn').style.display='none';
+}
+
+function toggleCorrect(n){
+  const item=document.getElementById('ans-item-'+n);
+  const wasCorrect=item.classList.contains('is-correct');
+  // For single-answer cats: unselect others
+  if(!wasCorrect) document.querySelectorAll('.ans-form-item').forEach(i=>i.classList.remove('is-correct'));
+  item.classList.toggle('is-correct',!wasCorrect);
+}
+
+function delAnswer(n){
+  const el=document.getElementById('ans-item-'+n);
+  if(el){ el.remove(); answerCount=Math.max(0,answerCount-1); }
+  if(answerCount<5) document.getElementById('add-ans-btn').style.display='block';
+}
+
+function addRoadInput(){
+  const c=document.getElementById('road-inputs');
+  const inp=document.createElement('input');
+  inp.className='admin-input';
+  inp.placeholder='• Holat...';
+  inp.style.marginBottom='8px';
+  c.appendChild(inp);
+}
+
+function saveQuestion(){
+  const btn=document.querySelector('#sc-add-q .admin-go');
+  btn.textContent='✅ Saqlandi!';
+  btn.style.background='#1b5e20';
+  setTimeout(()=>{ btn.textContent='💾 Savolni saqlash'; btn.style.background=''; },2000);
+}
+
+// Init answers
+(function initAnswers(){
+  for(let i=0;i<4;i++) addAnswer();
+})();
+
+// ─── BANNER EDIT ─────────────────────────────
+// ─── BANNER TYPE ─────────────────────────────
+function setBannerType(type){
+  ['text','img','both'].forEach(t=>{
+    document.getElementById('btype-'+t).classList.toggle('active', t===type);
+  });
+  const imgSec = document.getElementById('banner-img-section');
+  const txtSec = document.getElementById('banner-text-section');
+  const imgSaveBtn = document.getElementById('banner-img-save-btn');
+
+  imgSec.style.display = (type==='img' || type==='both') ? 'block' : 'none';
+  txtSec.style.display = (type==='text' || type==='both') ? 'block' : 'none';
+
+  // Show save in image section only when img-only (both mode has save in text section)
+  if(imgSaveBtn) imgSaveBtn.style.display = type==='img' ? 'block' : 'none';
+}
+
+function previewBannerImg(input){
+  if(!input.files[0]) return;
+  const file = input.files[0];
+  const url = URL.createObjectURL(file);
+
+  // Show preview, hide upload box
+  const thumb = document.getElementById('banner-img-thumb');
+  thumb.src = url;
+  document.getElementById('banner-img-preview-wrap').style.display = 'block';
+  document.getElementById('banner-upload-box').style.display = 'none';
+
+  // Apply bg to preview card
+  const overlay = document.getElementById('banner-img-overlay');
+  if(overlay){ overlay.style.backgroundImage = `url(${url})`; overlay.style.display = 'block'; }
+}
+
+function removeBannerImg(){
+  document.getElementById('banner-img-thumb').src='';
+  document.getElementById('banner-img-preview-wrap').style.display='none';
+  document.getElementById('banner-upload-box').style.display='flex';
+  const ov=document.getElementById('banner-img-overlay'); if(ov) ov.style.display='none';
+  document.getElementById('banner-img-input').value='';
+}
+
+function updateBannerPreview(){
+  document.getElementById('banner-preview-title').textContent=document.getElementById('b-title').value;
+  document.getElementById('banner-preview-span').textContent=document.getElementById('b-span').value;
+  document.getElementById('banner-preview-sub').textContent=document.getElementById('b-sub').value;
+}
+function saveBanner(){
+  const t=document.getElementById('b-title').value;
+  const s=document.getElementById('b-span').value;
+  const sub=document.getElementById('b-sub').value;
+  document.querySelector('.banner-body .banner-title').innerHTML=t+'<br><span>'+s+'</span>';
+  document.querySelector('.banner-body .banner-sub').textContent=sub;
+  // Apply image to home banner if uploaded
+  const overlay=document.getElementById('banner-img-overlay');
+  if(overlay.style.display==='block'){
+    const homeBanner=document.querySelector('.home-banner');
+    homeBanner.style.backgroundImage=overlay.style.backgroundImage;
+    homeBanner.style.backgroundSize='cover';
+    homeBanner.style.backgroundPosition='center';
+  }
+  const btn=document.querySelector('#sc-banner-edit .admin-go');
+  btn.textContent='✅ Saqlandi!';
+  setTimeout(()=>{ btn.textContent='💾 Saqlash'; goScreen('sc-admin'); },1500);
+}
+
+// Init
+refreshModes();
+</script>
+</body>
+</html>
