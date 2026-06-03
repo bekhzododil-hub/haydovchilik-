@@ -1732,8 +1732,14 @@ function checkPin(){
 }
 
 // ─── SETTINGS ────────────────────────────────
-let adminUsername = 'your_admin';
-let adminPin = '1234';
+let adminUsername = localStorage.getItem('adminUsername') || 'your_admin';
+let adminPin = localStorage.getItem('adminPin') || '1234';
+
+// Pre-fill settings form on load
+window.addEventListener('DOMContentLoaded', function(){
+  const unameEl = document.getElementById('settings-username');
+  if(unameEl && adminUsername !== 'your_admin') unameEl.value = adminUsername;
+});
 
 function previewAccessBg(input){
   if(!input.files[0]) return;
@@ -1760,8 +1766,8 @@ function changePin(){
   if(p1.length!==4||!/^\d{4}$/.test(p1)){ alert('PIN 4 ta raqamdan iborat bo\'lishi kerak!'); return; }
   if(p1!==p2){ alert('PIN larni mos kelmadi!'); return; }
   adminPin=p1;
-  // Update runtime ADMIN_PIN — use a workaround via closure
   window._ADMIN_PIN=p1;
+  localStorage.setItem('adminPin', p1);
   document.getElementById('settings-pin').value='';
   document.getElementById('settings-pin2').value='';
   const btn=event.target;
@@ -1772,15 +1778,15 @@ function changePin(){
 function saveSettings(){
   // Username
   const uname=document.getElementById('settings-username').value.trim().replace('@','');
-  if(uname) adminUsername=uname;
+  if(uname){ adminUsername=uname; localStorage.setItem('adminUsername', uname); }
   // Price
   const price=document.getElementById('settings-price').value;
   const priceSub=document.getElementById('settings-price-sub').value;
-  if(price) document.getElementById('noaccess-price-display').textContent=price;
-  if(priceSub) document.getElementById('noaccess-price-sub').textContent=priceSub;
+  if(price){ document.getElementById('noaccess-price-display').textContent=price; localStorage.setItem('naPrice', price); }
+  if(priceSub){ document.getElementById('noaccess-price-sub').textContent=priceSub; localStorage.setItem('naPriceSub', priceSub); }
   // Desc
   const desc=document.getElementById('settings-desc').value;
-  if(desc) document.getElementById('noaccess-desc').innerHTML=desc.replace(/\n/g,'<br>');
+  if(desc){ document.getElementById('noaccess-desc').innerHTML=desc.replace(/\n/g,'<br>'); localStorage.setItem('naDesc', desc); }
 
   const btn=document.querySelector('#sc-settings .green-btn');
   btn.textContent='✅ Saqlandi!'; btn.style.background='#1b5e20';
@@ -1790,9 +1796,15 @@ function saveSettings(){
 // ─── ADMIN ACTIONS ───────────────────────────
 function contactAdmin(){
   const url=`https://t.me/${adminUsername}`;
-  // Real Telegram Mini App:
-  // window.Telegram?.WebApp?.openTelegramLink(url);
-  alert(`Admin bilan bog'lanish:\nt.me/${adminUsername}\n\n(Real botda Telegram chat ochiladi)`);
+  try {
+    if(window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.openTelegramLink){
+      window.Telegram.WebApp.openTelegramLink(url);
+    } else {
+      window.open(url, '_blank');
+    }
+  } catch(e) {
+    window.open(url, '_blank');
+  }
 }
 function activateUser(){
   const val=document.getElementById('act-input').value.trim();
@@ -2405,6 +2417,25 @@ function saveBanner(){
 
 // Init
 refreshModes();
+
+// ─── LOAD SAVED SETTINGS ────────────────────
+(function loadSavedSettings(){
+  // Restore price/desc from localStorage
+  const savedPrice = localStorage.getItem('naPrice');
+  const savedPriceSub = localStorage.getItem('naPriceSub');
+  const savedDesc = localStorage.getItem('naDesc');
+  const savedPin = localStorage.getItem('adminPin');
+
+  if(savedPrice){ const el=document.getElementById('noaccess-price-display'); if(el) el.textContent=savedPrice; }
+  if(savedPriceSub){ const el=document.getElementById('noaccess-price-sub'); if(el) el.textContent=savedPriceSub; }
+  if(savedDesc){ const el=document.getElementById('noaccess-desc'); if(el) el.innerHTML=savedDesc.replace(/\n/g,'<br>'); }
+  if(savedPin){ window._ADMIN_PIN=savedPin; }
+
+  // Pre-fill settings form
+  const unameEl=document.getElementById('settings-username');
+  const storedUname=localStorage.getItem('adminUsername');
+  if(unameEl && storedUname) unameEl.value=storedUname;
+})();
 </script>
 </body>
 </html>
