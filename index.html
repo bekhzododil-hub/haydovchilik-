@@ -4,6 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>운전면허 — Haydovchilik</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script>
+  try { Telegram.WebApp.ready(); Telegram.WebApp.expand(); } catch(e) {}
+</script>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -19,11 +23,11 @@
   --dark: #1a1a1a;
 }
 * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-body { background:#1c1c1e; display:flex; justify-content:center; min-height:100vh; padding:24px 16px; font-family:'Nunito','Noto Sans KR',sans-serif; }
+body { background:#1c1c1e; display:flex; justify-content:center; min-height:100vh; font-family:'Nunito','Noto Sans KR',sans-serif; }
 
 /* PHONE */
-.phone { width:390px; background:var(--bg); border-radius:46px; overflow:hidden; box-shadow:0 40px 100px rgba(0,0,0,.6),0 0 0 1px #444; border:2px solid #3a3a3a; }
-.statusbar { background:var(--yellow); padding:14px 24px 8px; display:flex; justify-content:space-between; font-size:13px; font-weight:800; color:#000; }
+.phone { width:100%; max-width:100%; background:var(--bg); border-radius:0; overflow:hidden; box-shadow:none; border:none; }
+.statusbar { display:none; }
 
 /* SCREENS */
 .screen { display:none; flex-direction:column; }
